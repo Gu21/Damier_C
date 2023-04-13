@@ -1,0 +1,28 @@
+Création d'un jeu de Dame : Player VS Player
+-------------------------------------------------
+// Damier 10x10.
+
+// Générer un affichage.
+// chaque tour on doit voir l'état du damier.
+chaque déplacement affiche la source du pion et la destination
+
+On doit afficher :
+le nombre de pièces noires restantes.
+le nombre de pieces blanches restantes.
+
+
+chaque deplacement d'une partie doit etre log dans un fichier.
+
+
+//Utiliser une liste chainee
+//malloc et free.
+
+
+BONUS OBLIGATOIRE :
+Le jeu doit permettre la sauvegarde et le chargement de sauvegarde.
+donner la possibilite de revenir sur un coup.
+
+
+BONUS :
+-------------------------------------------------
+Generer un Player VS IA.

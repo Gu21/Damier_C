@@ -59,4 +59,5 @@ void updatePawnState(pawn_t *pawnEated, player_t *opponent);                    
 void updatePawnStatus(pawn_t *movingPawn);                                                                                        // Statut du pion
 void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, int finalY);                          // Déplacement des pions
 
+int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlayerChecked);
 #endif /* !pawn_H_ */

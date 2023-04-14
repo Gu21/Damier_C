@@ -9,6 +9,14 @@
 #include "player.h"
 #include "pawn.h"
 
+// DEFINE(S)
+#define BOARD_SIZE 10
+#define WHITE_PAWN 'w'
+#define WHITE_DRAUGHT 'W'
+#define BLACK_PAWN 'b'
+#define BLACK_DRAUGHT 'B'
+#define FREE_SQUARE ' '
+
 // STRUCTURE(S)
 
 
@@ -16,10 +24,10 @@
 
 
 // PROTOTYPE(S)
-int menu(void);                                                                         // Menu de sélection
-void displayBoard(player_t *pPlayer1, player_t *pPlayer2);                              // Affichage du plateau
-void displayPlayer(void);                                                               // Affichage des joueurs
-void displayScore(void);                                                                // Affichage score des joueurs
-void endGame(void);                                                                     // Affichage de fin de partie. Annonce le gagnant
+int menu(void);                                             // Menu de sélection
+void displayBoard(player_t *pPlayer1, player_t *pPlayer2);  // Affichage du plateau
+void displayPlayer(void);                                   // Affichage des joueurs
+void displayScore(void);                                    // Affichage score des joueurs
+void endGame(player_t *pPlayer1, player_t *pPlayer2);       // Affichage de fin de partie. Annonce le gagnant
 
 #endif /* !display_H_ */

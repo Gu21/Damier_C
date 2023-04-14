@@ -1,28 +1,60 @@
 Création d'un jeu de Dame : Player VS Player
 -------------------------------------------------
-// Damier 10x10.
+- Damier 10x10.
 
-// Générer un affichage.
-// chaque tour on doit voir l'état du damier.
-chaque déplacement affiche la source du pion et la destination
+- Générer un affichage.
+- Chaque tour on doit voir l'état du damier.
+- Chaque déplacement affiche la source du pion et la destination
 
 On doit afficher :
-le nombre de pièces noires restantes.
-le nombre de pieces blanches restantes.
+- Le nombre de pièces noires restantes.
+- Le nombre de pieces blanches restantes.
 
 
-chaque deplacement d'une partie doit etre log dans un fichier.
+- Chaque déplacement d'une partie doit etre log dans un fichier.
+Couleur / coordonnées initiales / coordonnées finales
+W / 1 0 / 2 1
 
-
-//Utiliser une liste chainee
-//malloc et free.
+- Utiliser une liste chainee
+- Malloc et free.
 
 
 BONUS OBLIGATOIRE :
-Le jeu doit permettre la sauvegarde et le chargement de sauvegarde.
-donner la possibilite de revenir sur un coup.
+-------------------
+- Le jeu doit permettre la sauvegarde et le chargement de sauvegarde.
+couleur / """ID""" / coord_x / coord_y / state / status
+W/0/0/0/V/P
+W/1/6/4/V/P
+W/2/7/2/M/P
+
+- Donner la possibilite de revenir sur un coup.
 
 
 BONUS :
--------------------------------------------------
-Generer un Player VS IA.
+-------
+- Generer un Player VS IA.
+
+
+Se passe dans movePawnByPlayer :
+--------------------------------
+On vérifie si le joueur a un déplacement obligatoire à faire. (checkMandatoryMove)
+Si c'est le cas, on préselectionne le pion à déplacer et on prévient le joueur.
+On demande au joueur les coordonnées de l'endroit où il veut déplacer son pion.
+On vérifie que le déplacement est possible (dans le plateau et case suivante libre) (checkAuthorizedMove)
+Si non ok, il resélectionne.
+
+La suite se passe dans MovePawn :
+---------------------------------
+Si ok, on change les coordonnées du pion. (movePawn)
+On vérifie si le pion est arrivé sur la dernière ligne.
+Si c'est le cas, on le transforme en reine (updatePawnStatus)
+On vérifie s'il vient de manger un pion adverse.
+Si c'est le cas, on met à jour l'état du pion mangé (updatePawnState + updateScore)
+
+
+Liste erreurs :
+---------------
+-1 : File cannot be opened
+-2 : Cannot write in a file
+-3 : File cannot be closed
+-4 : Pointer null

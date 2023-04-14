@@ -5,10 +5,10 @@
 
 
 // LOCAL INCLUDE(S)
+#include "pawn.h"
+#include "player.h"
 #include "game.h"
 #include "display.h"
-#include "player.h"
-#include "pawn.h"
 
 // STRUCTURE(S)
 

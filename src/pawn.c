@@ -391,7 +391,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
                 printf("Coordonnee Y:%d\n", pawnPlayerChecked->_coord_y);
                 printf("Coordonnee check p1 X:%d\n", checkP1->_coord_x);
                 printf("Coordonnee check p1 Y:%d\n", checkP1->_coord_y);
-                return 0;
+                break;
             } else {
                 checkP1 = checkP1->p_next;
             }
@@ -409,7 +409,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
                 printf("Coordonnee Y:%d\n", pawnPlayerChecked->_coord_y);
                 printf("Coordonnee check p2 X:%d\n", checkP2->_coord_x);
                 printf("Coordonnee check p2 Y:%d\n", checkP2->_coord_y);
-                return 0;
+                break;
             } else {
                 checkP2 = checkP2->p_next;
             }
@@ -427,7 +427,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
                 printf("Coordonnee Y:%d\n", pawnPlayerChecked->_coord_y);
                 printf("Coordonnee check p1 X:%d\n", checkP1->_coord_x);
                 printf("Coordonnee check p1 Y:%d\n", checkP1->_coord_y);
-                return 0;
+                break;
             } else {
                 checkP1 = checkP1->p_next;
             }
@@ -445,15 +445,29 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
                 printf("Coordonnee Y:%d\n", pawnPlayerChecked->_coord_y);
                 printf("Coordonnee check p2 X:%d\n", checkP2->_coord_x);
                 printf("Coordonnee check p2 Y:%d\n", checkP2->_coord_y);
-                return 0;
+                break;
             } else {
                 checkP2 = checkP2->p_next;
             }
         }
     }
-
-    printf("Emplacement disponible apres avoir manger\n");
-    printf("Coordonnee X:%d\n", pawnPlayerChecked->_coord_x);
-    printf("Coordonnee Y:%d\n", pawnPlayerChecked->_coord_y);
-    return 1;
+    if ((checkP1 != NULL && (checkP1->_coord_x < 0 || checkP1->_coord_x > 9 || checkP1->_coord_y < 0 || checkP1->_coord_y > 9))
+        || (checkP2 != NULL && (checkP2->_coord_x < 0 || checkP2->_coord_x > 9 || checkP2->_coord_y < 0 || checkP2->_coord_y > 9))){
+        printf("Aucune case de libre apres avoir mange\n");
+        return 0;
+    } else {
+        printf("Emplacement disponible apres avoir manger\n");
+        printf("Coordonnee X:%d\n", pawnPlayerChecked->_coord_x);
+        printf("Coordonnee Y:%d\n", pawnPlayerChecked->_coord_y);
+        if (checkP1 != NULL) {
+            printf("Coordonnee check p1 X:%d\n", checkP1->_coord_x);
+            printf("Coordonnee check p1 Y:%d\n", checkP1->_coord_y);
+        }
+        if (checkP2 != NULL) {
+            printf("Coordonnee check p2 X:%d\n", checkP2->_coord_x);
+            printf("Coordonnee check p2 Y:%d\n", checkP2->_coord_y);
+        }
+        return 1;
+    }
+    
 }

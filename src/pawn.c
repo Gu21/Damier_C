@@ -377,6 +377,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
 
     pawn_t* checkP1 = player->p_listPawn->p_head;
     pawn_t* checkP2 = opponent->p_listPawn->p_head;
+    int isOutOfBoardCheckP1 = 0;
+    int isOutOfBoardCheckP2 = 0;
 
     if (player->_couleur == COLOR_W){
         while (checkP1 != NULL)
@@ -396,6 +398,22 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
                 checkP1 = checkP1->p_next;
             }
         }
+        if (checkP1 == NULL){
+            checkP1 = player->p_listPawn->p_head;
+            while (checkP1 != NULL)
+            {
+                if (pawnPlayerChecked->_coord_x+2 < 0 || pawnPlayerChecked->_coord_x+2 >9
+                || pawnPlayerChecked->_coord_x-2 < 0 || pawnPlayerChecked->_coord_x-2 >9
+                || pawnPlayerChecked->_coord_y-2 < 0 || pawnPlayerChecked->_coord_y-2 >9){
+                    printf("Les coordonnee P1 sont out\n");
+                    isOutOfBoardCheckP1 = 1;
+                    break;
+            } else {
+                checkP1 = checkP1->p_next;
+            }
+            }
+            
+        }
 
         while (checkP2 != NULL)
         {
@@ -413,6 +431,23 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             } else {
                 checkP2 = checkP2->p_next;
             }
+        }
+
+        if (checkP2 == NULL){
+            checkP2 = player->p_listPawn->p_head;
+            while (checkP2 != NULL)
+            {
+                if (pawnPlayerChecked->_coord_x+2 < 0 || pawnPlayerChecked->_coord_x+2 >9
+                || pawnPlayerChecked->_coord_x-2 < 0 || pawnPlayerChecked->_coord_x-2 >9
+                || pawnPlayerChecked->_coord_y-2 < 0 || pawnPlayerChecked->_coord_y-2 >9){
+                    printf("Les coordonnee P2 sont out\n");
+                    isOutOfBoardCheckP2 = 1;
+                    break;
+            } else {
+                checkP2 = checkP2->p_next;
+            }
+            }
+            
         }
     } else {
                 while (checkP1 != NULL)
@@ -433,9 +468,26 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             }
         }
 
+        if (checkP1 == NULL){
+            checkP1 = player->p_listPawn->p_head;
+            while (checkP1 != NULL)
+            {
+                if (pawnPlayerChecked->_coord_x+2 < 0 || pawnPlayerChecked->_coord_x+2 >9
+                || pawnPlayerChecked->_coord_x-2 < 0 || pawnPlayerChecked->_coord_x-2 >9
+                || pawnPlayerChecked->_coord_y+2 < 0 || pawnPlayerChecked->_coord_y+2 >9){
+                    printf("Les coordonnee P1 sont out\n");
+                    isOutOfBoardCheckP1 = 1;
+                    break;
+            } else {
+                checkP1 = checkP1->p_next;
+            }
+            }
+            
+        }
+
         while (checkP2 != NULL)
         {
-            if ((checkP2->_coord_x == pawnPlayerChecked->_coord_x+2
+                        if ((checkP2->_coord_x == pawnPlayerChecked->_coord_x+2
             && checkP2->_coord_y == pawnPlayerChecked->_coord_y+2 && checkP2->_state == ALIVE)
             || (checkP2->_coord_x == pawnPlayerChecked->_coord_x-2
             && checkP2->_coord_y == pawnPlayerChecked->_coord_y+2 && checkP2->_state == ALIVE)
@@ -450,9 +502,27 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
                 checkP2 = checkP2->p_next;
             }
         }
+
+        if (checkP2 == NULL){
+            checkP2 = player->p_listPawn->p_head;
+            while (checkP2 != NULL)
+            {
+                if (pawnPlayerChecked->_coord_x+2 < 0 || pawnPlayerChecked->_coord_x+2 >9
+                || pawnPlayerChecked->_coord_x-2 < 0 || pawnPlayerChecked->_coord_x-2 >9
+                || pawnPlayerChecked->_coord_y+2 < 0 || pawnPlayerChecked->_coord_y+2 >9){
+                    printf("Les coordonnee P2 sont out\n");
+                    isOutOfBoardCheckP2 = 1;
+                    break;
+            } else {
+                checkP2 = checkP2->p_next;
+            }
+            }
+            
+        }
     }
-    if ((checkP1 != NULL && (checkP1->_coord_x < 0 || checkP1->_coord_x > 9 || checkP1->_coord_y < 0 || checkP1->_coord_y > 9))
-        || (checkP2 != NULL && (checkP2->_coord_x < 0 || checkP2->_coord_x > 9 || checkP2->_coord_y < 0 || checkP2->_coord_y > 9))){
+    if ((checkP1 != NULL && isOutOfBoardCheckP2 == 1)
+        || (checkP2 != NULL && isOutOfBoardCheckP1 == 1)
+        || (checkP2 != NULL && checkP1 != NULL)){
         printf("Aucune case de libre apres avoir mange\n");
         return 0;
     } else {

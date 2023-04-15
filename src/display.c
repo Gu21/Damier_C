@@ -46,7 +46,10 @@ void displayBoard(player_t *pPlayer1, player_t *pPlayer2) {
                 if (currentPawnPlayer1->_coord_x == incr_column
                 && currentPawnPlayer1->_coord_y == incr_row
                 && currentPawnPlayer1->_state == ALIVE) {
-                    board[incr_column][incr_row] = WHITE_PAWN;
+                    if(currentPawnPlayer1->_status == PAWN)
+                        board[incr_column][incr_row] = WHITE_PAWN;
+                    else
+                        board[incr_column][incr_row] = WHITE_DRAUGHT;
                     pionPlace = 1;
                     break;
                 } else {
@@ -60,7 +63,10 @@ void displayBoard(player_t *pPlayer1, player_t *pPlayer2) {
                 if (currentPawnPlayer2->_coord_x == incr_column
                 && currentPawnPlayer2->_coord_y == incr_row
                 && currentPawnPlayer2->_state == ALIVE) {
-                    board[incr_column][incr_row] = BLACK_PAWN;
+                    if(currentPawnPlayer2->_status == PAWN)
+                        board[incr_column][incr_row] = BLACK_PAWN;
+                    else
+                        board[incr_column][incr_row] = BLACK_DRAUGHT;
                     pionPlace = 1;
                     break;
                 } else {

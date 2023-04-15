@@ -1,0 +1,26 @@
+techniquement il y a une petite erreur dans cette série :
+9 6
+8 5
+0 3
+1 4
+1 6
+2 5
+8 3
+7 4
+Coup obligatoire => 2 5
+0 3
+Coup obligatoire => 7 4
+9 6
+3 6
+2 5
+2 3
+3 4
+5 6
+6 5
+Coup obligatoire => 3 4
+1 6
+Coup obligatoire => 2 7
+0 5
+
+
+White n'est pas obligé de jouer 2 7, il aurait pu jouer 0 7 également.

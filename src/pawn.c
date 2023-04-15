@@ -105,7 +105,6 @@ void initPawn(pawn_header_t *liste_chaine, int i, char couleur)
     }
 }
 
-
 void updatePawnState(pawn_t *pawnEated, player_t *opponent) {
     pawnEated->_state = DEAD;
     opponent->_score++;
@@ -125,7 +124,6 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
     // Pour chaque pion de player
     while (pawnPlayerChecked != NULL)
     {
-        
         // printf("\npawnPlayer = %p\n", pawnPlayerChecked);
         // printf("P coord X  = %d\n", pawnPlayerChecked->_coord_x);
         // printf("P coord Y  = %d\n", pawnPlayerChecked->_coord_y);
@@ -217,7 +215,6 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
     }
 }
 
-
 int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn, int tempFinalX, int tempFinalY)
 {
     // Déclaration de la mémoire
@@ -304,7 +301,6 @@ int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn
     return 1;
 }
 
-
 int checkAllMoves(player_t *player, player_t *opponent, pawn_t *movingPawn)
 {
     int possibleMoves = 0;
@@ -321,7 +317,6 @@ int checkAllMoves(player_t *player, player_t *opponent, pawn_t *movingPawn)
 
     return possibleMoves;
 }
-
 
 void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, int finalY)
 {
@@ -376,7 +371,6 @@ void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, in
 }
 
 int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlayerChecked) {
-
     int isPawnInOpponentList = 0;
     int isPawnInPlayerList = 0;
     int isMoveIsOutOfBoard = 0;
@@ -657,5 +651,4 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
     } else {
         return 0;
     }
-    
 }

@@ -50,7 +50,7 @@ void game(int IA_J1, int IA_J2)
             movePawnByPlayer(J1, J2);
 
             // On affiche le terrain après le déplacement
-            displayBoard(J1, J2);
+            //displayBoard(J1, J2);
         }
 
         // Au tour de J2
@@ -65,7 +65,7 @@ void game(int IA_J1, int IA_J2)
             movePawnByPlayer(J2, J1);
 
             // On affiche le terrain après le déplacement
-            displayBoard(J1, J2);
+            //displayBoard(J1, J2);
         }
     }
 

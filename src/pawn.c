@@ -153,6 +153,7 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
                         && pawnOpponentChecked->_coord_y+1 == pawnPlayerChecked->_coord_y
                         && pawnOpponentChecked->_state == ALIVE)
                         {
+                            printf("Pion en cours de verification X:%d Y:%d\n", pawnPlayerChecked->_coord_x, pawnPlayerChecked->_coord_y);
                             // On vérifie que le déplacement est valide
                             if (isMandatoryMoveValid(player, opponent, pawnPlayerChecked) == 1) {
                                 // On sélectionne ce pion
@@ -179,6 +180,7 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
                         && pawnOpponentChecked->_coord_y-1 == pawnPlayerChecked->_coord_y
                         && pawnOpponentChecked->_state == ALIVE)
                         {
+                            printf("Pion en cours de verification X:%d Y:%d\n", pawnPlayerChecked->_coord_x, pawnPlayerChecked->_coord_y);
                             // On vérifie que le déplacement est valide
                             if (isMandatoryMoveValid(player, opponent, pawnPlayerChecked) == 1) {
                                 // On sélectionne ce pion
@@ -388,7 +390,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         // On vérifie si le pion y-1 x+1 appartient à la liste de l'opposant
         while (opponentList != NULL) {
             if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x+1)
-                    && opponentList->_coord_y == pawnPlayerChecked->_coord_y-1){
+                    && opponentList->_coord_y == pawnPlayerChecked->_coord_y-1
+                    && opponentList->_state == ALIVE){
                         printf("Le pion est present dans la liste de l'opposant en +1\n");
                         isPawnInOpponentList = 1;
                         break;
@@ -397,15 +400,18 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
                     }
         }
         // On vérifie si le pion y-1 x+1 appartient à la liste du joueur
-        while (playerList != NULL) {
-            if ((playerList->_coord_x == pawnPlayerChecked->_coord_x+1)
-                    && playerList->_coord_y == pawnPlayerChecked->_coord_y-1){
-                        printf("Le pion est present dans la liste du joueur en +1\n");
-                        isPawnInPlayerList = 1;
-                        break;
-                    } else {
-                        playerList = playerList->p_next;
-                    }
+        if (isPawnInOpponentList == 0) {
+            while (playerList != NULL) {
+                if ((playerList->_coord_x == pawnPlayerChecked->_coord_x+1)
+                        && playerList->_coord_y == pawnPlayerChecked->_coord_y-1
+                        && playerList->_state == ALIVE){
+                            printf("Le pion est present dans la liste du joueur en +1\n");
+                            isPawnInPlayerList = 1;
+                            break;
+                        } else {
+                            playerList = playerList->p_next;
+                        }
+        }
         }
         // On vérifie si le déplacement y-2 x+2 est >0 et <9
         if (isPawnInOpponentList == 1 || isPawnInPlayerList == 1 || isPawnInPlayerList == 0) {
@@ -419,7 +425,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             opponentList = opponent->p_listPawn->p_head;
             while (opponentList != NULL) {
                 if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x+2)
-                        && opponentList->_coord_y == pawnPlayerChecked->_coord_y-2){
+                        && opponentList->_coord_y == pawnPlayerChecked->_coord_y-2
+                        && opponentList->_state == ALIVE){
                             printf("Le pion est present dans la liste de l'opposant en +2\n");
                             break;
                         } else {
@@ -429,7 +436,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             playerList = player->p_listPawn->p_head;
             while (playerList != NULL) {
                 if ((playerList->_coord_x == pawnPlayerChecked->_coord_x+2)
-                        && playerList->_coord_y == pawnPlayerChecked->_coord_y-2){
+                        && playerList->_coord_y == pawnPlayerChecked->_coord_y-2
+                        && playerList->_state == ALIVE){
                             printf("Le pion est present dans la liste du joueur en +2\n");
                             break;
                         }else{
@@ -449,7 +457,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         opponentList = opponent->p_listPawn->p_head;
         while (opponentList != NULL) {
             if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x-1)
-                    && opponentList->_coord_y == pawnPlayerChecked->_coord_y-1){
+                    && opponentList->_coord_y == pawnPlayerChecked->_coord_y-1
+                    && opponentList->_state == ALIVE){
                         printf("Le pion est present dans la liste de l'opposant en -1\n");
                         isPawnInOpponentList = 1;
                         break;
@@ -457,17 +466,20 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
                         opponentList = opponentList->p_next;
                     }
         }
+        if (isPawnInOpponentList == 0) {
         // On vérifie si le pion y-1 x-1 appartient à la liste du joueur
-        playerList = player->p_listPawn->p_head;
-        while (playerList != NULL) {
-            if ((playerList->_coord_x == pawnPlayerChecked->_coord_x-1)
-                    && playerList->_coord_y == pawnPlayerChecked->_coord_y-1){
-                        printf("Le pion est present dans la liste du joueur en -1\n");
-                        isPawnInPlayerList = 1;
-                        break;
-                    } else {
-                        playerList = playerList->p_next;
-                    }
+            playerList = player->p_listPawn->p_head;
+            while (playerList != NULL) {
+                if ((playerList->_coord_x == pawnPlayerChecked->_coord_x-1)
+                        && playerList->_coord_y == pawnPlayerChecked->_coord_y-1
+                        && playerList->_state == ALIVE){
+                            printf("Le pion est present dans la liste du joueur en -1\n");
+                            isPawnInPlayerList = 1;
+                            break;
+                        } else {
+                            playerList = playerList->p_next;
+                        }
+            }
         }
         // On vérifie si le déplacement y-2 x-2 est >0 et <9
         if (isPawnInOpponentList == 1 || isPawnInPlayerList == 1 || isPawnInPlayerList == 0) {
@@ -481,7 +493,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             opponentList = opponent->p_listPawn->p_head;
             while (opponentList != NULL) {
                 if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x-2)
-                        && opponentList->_coord_y == pawnPlayerChecked->_coord_y-2){
+                        && opponentList->_coord_y == pawnPlayerChecked->_coord_y-2
+                        && opponentList->_state == ALIVE){
                             printf("Le pion est present dans la liste de l'opposant en -2\n");
                             break;
                         } else {
@@ -491,7 +504,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             playerList = player->p_listPawn->p_head;
             while (playerList != NULL) {
                 if ((playerList->_coord_x == pawnPlayerChecked->_coord_x-2)
-                        && playerList->_coord_y == pawnPlayerChecked->_coord_y-2){
+                        && playerList->_coord_y == pawnPlayerChecked->_coord_y-2
+                        && playerList->_state == ALIVE){
                             printf("Le pion est present dans la liste du joueur en -2\n");
                             break;
                         }else{
@@ -510,7 +524,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         // On vérifie si le pion y+1 x+1 appartient à la liste de l'opposant
         while (opponentList != NULL) {
             if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x+1)
-                    && opponentList->_coord_y == pawnPlayerChecked->_coord_y+1){
+                    && opponentList->_coord_y == pawnPlayerChecked->_coord_y+1
+                    && opponentList->_state == ALIVE){
                         printf("Le pion est present dans la liste de l'opposant en +1\n");
                         isPawnInOpponentList = 1;
                         break;
@@ -518,16 +533,19 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
                         opponentList = opponentList->p_next;
                     }
         }
-        // On vérifie si le pion y+1 x+1 appartient à la liste du joueur
-        while (playerList != NULL) {
-            if ((playerList->_coord_x == pawnPlayerChecked->_coord_x+1)
-                    && playerList->_coord_y == pawnPlayerChecked->_coord_y+1){
-                        printf("Le pion est present dans la liste du joueur en +1\n");
-                        isPawnInPlayerList = 1;
-                        break;
-                    } else {
-                        playerList = playerList->p_next;
-                    }
+        if (isPawnInOpponentList == 0) {
+            // On vérifie si le pion y+1 x+1 appartient à la liste du joueur
+            while (playerList != NULL) {
+                if ((playerList->_coord_x == pawnPlayerChecked->_coord_x+1)
+                        && playerList->_coord_y == pawnPlayerChecked->_coord_y+1
+                        && playerList->_state == ALIVE){
+                            printf("Le pion est present dans la liste du joueur en +1\n");
+                            isPawnInPlayerList = 1;
+                            break;
+                        } else {
+                            playerList = playerList->p_next;
+                        }
+            }
         }
         // On vérifie si le déplacement y+2 x+2 est >0 et <9
         if (isPawnInOpponentList == 1 || isPawnInPlayerList == 1 || isPawnInPlayerList == 0) {
@@ -541,7 +559,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             opponentList = opponent->p_listPawn->p_head;
             while (opponentList != NULL) {
                 if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x+2)
-                        && opponentList->_coord_y == pawnPlayerChecked->_coord_y+2){
+                        && opponentList->_coord_y == pawnPlayerChecked->_coord_y+2
+                        && opponentList->_state == ALIVE){
                             printf("Le pion est present dans la liste de l'opposant en +2\n");
                             break;
                         } else {
@@ -551,7 +570,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             playerList = player->p_listPawn->p_head;
             while (playerList != NULL) {
                 if ((playerList->_coord_x == pawnPlayerChecked->_coord_x+2)
-                        && playerList->_coord_y == pawnPlayerChecked->_coord_y+2){
+                        && playerList->_coord_y == pawnPlayerChecked->_coord_y+2
+                        && playerList->_state == ALIVE){
                             printf("Le pion est present dans la liste du joueur en +2\n");
                             break;
                         }else{
@@ -571,7 +591,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         opponentList = opponent->p_listPawn->p_head;
         while (opponentList != NULL) {
             if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x-1)
-                    && opponentList->_coord_y == pawnPlayerChecked->_coord_y+1){
+                    && opponentList->_coord_y == pawnPlayerChecked->_coord_y+1
+                    && opponentList->_state == ALIVE){
                         printf("Le pion est present dans la liste de l'opposant en -1\n");
                         isPawnInOpponentList = 1;
                         break;
@@ -579,17 +600,20 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
                         opponentList = opponentList->p_next;
                     }
         }
-        // On vérifie si le pion y+1 x-1 appartient à la liste du joueur
-        playerList = player->p_listPawn->p_head;
-        while (playerList != NULL) {
-            if ((playerList->_coord_x == pawnPlayerChecked->_coord_x-1)
-                    && playerList->_coord_y == pawnPlayerChecked->_coord_y+1){
-                        printf("Le pion est present dans la liste du joueur en -1\n");
-                        isPawnInPlayerList = 1;
-                        break;
-                    } else {
-                        playerList = playerList->p_next;
-                    }
+        if (isPawnInOpponentList == 0) {
+            // On vérifie si le pion y+1 x-1 appartient à la liste du joueur
+            playerList = player->p_listPawn->p_head;
+            while (playerList != NULL) {
+                if ((playerList->_coord_x == pawnPlayerChecked->_coord_x-1)
+                        && playerList->_coord_y == pawnPlayerChecked->_coord_y+1
+                        && playerList->_state == ALIVE){
+                            printf("Le pion est present dans la liste du joueur en -1\n");
+                            isPawnInPlayerList = 1;
+                            break;
+                        } else {
+                            playerList = playerList->p_next;
+                        }
+            }
         }
         // On vérifie si le déplacement y+2 x-2 est >0 et <9
         if (isPawnInOpponentList == 1 || isPawnInPlayerList == 1 || isPawnInPlayerList == 0) {
@@ -603,7 +627,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             opponentList = opponent->p_listPawn->p_head;
             while (opponentList != NULL) {
                 if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x-2)
-                        && opponentList->_coord_y == pawnPlayerChecked->_coord_y+2){
+                        && opponentList->_coord_y == pawnPlayerChecked->_coord_y+2
+                        && opponentList->_state == ALIVE){
                             printf("Le pion est present dans la liste de l'opposant en -2\n");
                             break;
                         } else {
@@ -613,7 +638,8 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             playerList = player->p_listPawn->p_head;
             while (playerList != NULL) {
                 if ((playerList->_coord_x == pawnPlayerChecked->_coord_x-2)
-                        && playerList->_coord_y == pawnPlayerChecked->_coord_y+2){
+                        && playerList->_coord_y == pawnPlayerChecked->_coord_y+2
+                        && playerList->_state == ALIVE){
                             printf("Le pion est present dans la liste du joueur en -2\n");
                             break;
                         }else{

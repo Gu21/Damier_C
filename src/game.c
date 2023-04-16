@@ -108,9 +108,11 @@ void saveLog(char color, int initMoveX, int initMoveY, int finalMoveX, int final
     }
 }
 
-void saveGame(void) {
+void saveGame(player_t *player, player_t *opponent) {
+    char input[30];
+
     // Ouverture du fichier en écriture ou création du fichier
-    FILE *fp = fopen("save.txt", "a");
+    FILE *fp = fopen("./save/save.txt", "r");
 
     // Vérification si l'ouverture du fichier s'est bien passée
     if (fp == NULL)
@@ -119,14 +121,31 @@ void saveGame(void) {
         exit(-1);
     }
 
+    pawn_t* playerList = malloc(sizeof(pawn_t));
+    pawn_t* opponentList = malloc(sizeof(pawn_t));
+    playerList = player->p_listPawn->p_head;
+    opponentList = opponent->p_listPawn->p_head;
+
+    while (playerList != NULL) {
+        snprintf(input, sizeof input, "%c/%d/%d/%c/%c\n", 
+            player->_couleur, playerList->_coord_x, playerList->_coord_y, playerList->_state, playerList->_status);
+        fputs(input, fp);
+        playerList = playerList->p_next;
+    }
+    fclose(fp);
+
+    fp = fopen("./save/save.txt", "a");
+    while (opponentList != NULL) {
+        snprintf(input, sizeof input, "%c/%d/%d/%c/%c\n", 
+            opponent->_couleur, opponentList->_coord_x, opponentList->_coord_y, opponentList->_state, opponentList->_status);
+        fputs(input, fp);
+        opponentList = opponentList->p_next;
+    }
+
     // Vérification que l'écriture dans le fichier s'est bien passée
     // couleur / """ID""" / coord_x / coord_y / state / status
     // W/1/6/4/V/P
-    if (fputs("TEXTE A AJOUTER DANS LE FICHIER", fp) == EOF) // Texte à ajouter dans le fichier
-    {
-        fputs("Erreur lors de l'ecriture d'une ligne\n", stderr);
-        exit(-2);
-    }
+
 
     // Vérification que la fermeture du fichier s'est bien passée
     if (fclose(fp) == EOF)
@@ -134,6 +153,8 @@ void saveGame(void) {
         fputs("Erreur lors de la fermeture du flux\n", stderr);
         exit(-3);
     }
+    free(playerList);
+    free(opponentList);
 }
 
 void loadGame(void) {

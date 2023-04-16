@@ -19,7 +19,7 @@
 // PROTOTYPE(S)
 void game(int IA_J1, int IA_J2);                // Gère la partie
 void saveLog(char color, int initMoveX, int initMoveY, int finalMoveX, int finalMoveY);
-void saveGame(void);
+void saveGame(player_t *player, player_t *opponent);
 void loadGame(void);
 
 #endif /* !game_H_ */

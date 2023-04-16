@@ -1,4 +1,5 @@
 #include "player.h"
+#include "main.h"
 
 
 void initPlayer(player_t *player, char name[30], char couleur)
@@ -57,9 +58,17 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
                 while(MovingPawnSelected == 0)
                 {
                     // On demande les coordonnées initiales du pion à déplacer
-                    printf("Please enter X and Y initial coordinate with format X Y : ");
+                    printf("Please enter X and Y initial coordinate with format X Y (-1 -1 to save): ");
                     scanf("%d %d", &tempInitX, &tempInitY);
                     rewind(stdin);
+
+                    if (tempInitX == -1 && tempInitY == -1) {
+                        printf("Save in progress ...\n");
+                        saveGame(player, opponent);
+                        printf("Save Ok\n");
+                        printf("Exit game\n");
+                        exit(+1);
+                    }
 
                     if (tempInitX >= 0 && tempInitX <= 9 && tempInitY >= 0 && tempInitY <= 9)
                     {

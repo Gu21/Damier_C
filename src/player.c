@@ -4,7 +4,8 @@
 
 void initPlayer(player_t *player, char name[30], char couleur)
 {
-    pawn_header_t *liste_chaine = malloc(sizeof(pawn_header_t));       //J'alloue de l'espace mémoire avec Malloc à la liste_chaine
+    // J'alloue de l'espace mémoire avec Malloc à la liste_chaine
+    pawn_header_t *liste_chaine = malloc(sizeof(pawn_header_t));
 
     // On crée la liste des pions
     initPawnList(liste_chaine, couleur);
@@ -24,7 +25,6 @@ void initPlayer(player_t *player, char name[30], char couleur)
 void movePawnByPlayer(player_t *player, player_t *opponent)
 {
     pawn_t* movingPawn = malloc(sizeof(pawn_t));
-    // pawn_t* tempPawn = malloc(sizeof(pawn_t));
     int tempInitX = 0;
     int tempInitY = 0;
     int tempFinalX = 0;
@@ -33,7 +33,6 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
     int continueMove = 1;
     int dejaJouer = 0;
     int isMandatoryMove = 0;
-
     pawn_t* tempPawn = player->p_listPawn->p_head;
 
     while(continueMove == 1)
@@ -41,8 +40,8 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
         // c'est crade putain
         movingPawn->_coord_x = 0;
         movingPawn->_coord_y = 0;
-        movingPawn->_status = 'P';
-        movingPawn->_state = 'V';
+        movingPawn->_status = PAWN;
+        movingPawn->_state = ALIVE;
         movingPawn->p_next = NULL;
         movingPawn->p_previous = NULL;
 
@@ -62,7 +61,7 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
                     scanf("%d %d", &tempInitX, &tempInitY);
                     rewind(stdin);
 
-                    if (tempInitX == -1 && tempInitY == -1) {
+                    if (tempInitX == -1 || tempInitY == -1) {
                         printf("Save in progress ...\n");
                         saveGame(player, opponent);
                         printf("Save Ok\n");
@@ -152,7 +151,4 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
 
         dejaJouer = 1;
     }
-
-    // free(tempPawn);
-    //free(movingPawn);
 }

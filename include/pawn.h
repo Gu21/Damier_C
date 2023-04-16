@@ -6,8 +6,7 @@
 #include <stdlib.h>
 
 // LOCAL INCLUDE(S)
-//#include "player.h"
-//#include "display.h"
+
 
 // DEFINE(S)
 #define PAWN 'P'
@@ -50,16 +49,16 @@ typedef struct player_s player_t;
 
 
 // PROTOTYPE(S)
-void initPawnList(pawn_header_t *liste_chaine, char couleur);                                                               // Initialisation de la liste des pions
-void initPawn(pawn_header_t *liste_chaine, int i, char couleur);                                                            // Initialisation d'un pion
-int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn, int tempFinalX, int tempFinalY, int isMandatoryMove);          // Déplacement autorisé ou non du joueur.
+void initPawnList(pawn_header_t *liste_chaine, char couleur);                                                                           // Initialisation de la liste des pions
+void initPawn(pawn_header_t *liste_chaine, int i, char couleur);                                                                        // Initialisation d'un pion
+int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn, int tempFinalX, int tempFinalY, int isMandatoryMove); // Déplacement autorisé ou non du joueur.
 int checkAllMoves(player_t *player, player_t *opponent, pawn_t *movingPawn);
-int checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn);                                          // Obligation de jouer un pion (manger un pion adverse)
-void updatePawnState(pawn_t *pawnEated, player_t *opponent);                                                                // Etat du pion
-void updatePawnStatus(pawn_t *movingPawn);                                                                                  // Statut du pion
-void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, int finalY);                                  // Déplacement des pions
-
+int checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn);                                                       // Obligation de jouer un pion (manger un pion adverse)
+void updatePawnState(pawn_t *pawnEated, player_t *opponent);                                                                            // Etat du pion
+void updatePawnStatus(pawn_t *movingPawn);                                                                                              // Statut du pion
+void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, int finalY);                                              // Déplacement des pions
 int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlayerChecked);
-int IsMandatoryDraughtValid(player_t *opponent, pawn_t *pawnPlayerChecked, pawn_t *pawnOpponentChecked);        // On vérifie si le mouvement de la reine est possible
+int IsMandatoryDraughtValid(player_t *opponent, pawn_t *pawnPlayerChecked, pawn_t *pawnOpponentChecked);                                // On vérifie si le mouvement de la reine est possible
 int isPawnInList(pawn_t* list, pawn_t *pawnPlayerChecked, int coordX, int coordY);
+
 #endif /* !pawn_H_ */

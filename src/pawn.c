@@ -33,15 +33,11 @@ void initPawn(pawn_header_t *liste_chaine, int i, char couleur)
         //On initialise les valeurs par défaut.
         pion->_coord_x = 0;
         pion->_coord_y = 0;
-        //pion->_status = PAWN;
         pion->_status = PAWN;
+        //pion->_status = QUEEN;
         pion->_state = ALIVE;
         pion->p_next = NULL;
         pion->p_previous = NULL;
-
-        // TODO : FOR TEST ONLY !!!!!
-        pion->_coord_x = i%10;
-        pion->_coord_y = (i+1)%10;
 
         if(couleur == COLOR_B)
         {
@@ -117,19 +113,12 @@ void updatePawnStatus(pawn_t *movingPawn) {
 
 int checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn)
 {
-    //pawn_t* pawnPlayerChecked = malloc(sizeof(pawn_t));
-    //pawn_t* pawnOpponentChecked = malloc(sizeof(pawn_t));
     pawn_t* pawnPlayerChecked = player->p_listPawn->p_head;
     pawn_t* pawnOpponentChecked = opponent->p_listPawn->p_head;
 
     // Pour chaque pion de player
     while (pawnPlayerChecked != NULL)
     {
-        // printf("\npawnPlayer = %p\n", pawnPlayerChecked);
-        // printf("P coord X  = %d\n", pawnPlayerChecked->_coord_x);
-        // printf("P coord Y  = %d\n", pawnPlayerChecked->_coord_y);
-        // printf("P next     = %p\n", pawnPlayerChecked->p_next);
-
         pawnOpponentChecked = opponent->p_listPawn->p_head;
 
         // dont le state est à V
@@ -152,7 +141,6 @@ int checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn)
                         && (pawnOpponentChecked->_coord_y+1 == pawnPlayerChecked->_coord_y || pawnOpponentChecked->_coord_y-1 == pawnPlayerChecked->_coord_y)
                         && pawnOpponentChecked->_state == ALIVE)
                         {
-                            printf("Pion en cours de verification X:%d Y:%d\n", pawnPlayerChecked->_coord_x, pawnPlayerChecked->_coord_y);
                             // On vérifie que le déplacement est valide
                             if (isMandatoryMoveValid(player, opponent, pawnPlayerChecked) == 1) {
                                 // On sélectionne ce pion
@@ -178,7 +166,6 @@ int checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn)
                         && (pawnOpponentChecked->_coord_y-1 == pawnPlayerChecked->_coord_y || pawnOpponentChecked->_coord_y+1 == pawnPlayerChecked->_coord_y)
                         && pawnOpponentChecked->_state == ALIVE)
                         {
-                            printf("Pion en cours de verification X:%d Y:%d\n", pawnPlayerChecked->_coord_x, pawnPlayerChecked->_coord_y);
                             // On vérifie que le déplacement est valide
                             if (isMandatoryMoveValid(player, opponent, pawnPlayerChecked) == 1) {
                                 // On sélectionne ce pion
@@ -200,6 +187,7 @@ int checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn)
             else // Fonctionnement pour la reine
             {
                 // Bon, elle me casse les noix cette reine, elle a qu'à marcher comme un pion
+
                 /*while(pawnOpponentChecked != NULL)
                 {
                     if (abs(pawnOpponentChecked->_coord_x-pawnPlayerChecked->_coord_x) == abs(pawnOpponentChecked->_coord_y-pawnPlayerChecked->_coord_y))
@@ -234,16 +222,11 @@ int checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn)
 
 int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn, int tempFinalX, int tempFinalY, int isMandatoryMove)
 {
-    // Déclaration de la mémoire
-    //pawn_t* pawnCurrentPlayer = malloc(sizeof(pawn_t));
-    //pawn_t* pawnCurrentOpponent = malloc(sizeof(pawn_t));
-
     pawn_t* pawnCurrentPlayer = player->p_listPawn->p_head;
     pawn_t* pawnCurrentOpponent = opponent->p_listPawn->p_head;
 
     // Vérifier si les coordonnées sont dans le plateau
     if (tempFinalX < 0 || tempFinalX > 9 || tempFinalY < 0 || tempFinalY > 9) {
-        //printf("Coordinates are out of board\n");
         return 0;
     }
 
@@ -297,7 +280,6 @@ int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn
                     return 0;
                 }
             }
-            
 
             // Déplacement interdit sur l'axe X pour le pion blanc
             if ((movingPawn->_coord_x+2 < tempFinalX && tempFinalX < movingPawn->_coord_x-2)
@@ -433,7 +415,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         if (isPawnInOpponentList == 0) {
             isPawnInPlayerList = isPawnInList(playerList, pawnPlayerChecked, 1, -1);
         }
-        
+
         // On vérifie si le déplacement y-2 x+2 est >0 et <9
         if (isPawnInOpponentList == 1 || isPawnInPlayerList == 1 || isPawnInPlayerList == 0) {
             if (pawnPlayerChecked->_coord_x+2 < 0 || pawnPlayerChecked->_coord_x+2 > 9
@@ -445,13 +427,13 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         if (isMoveIsOutOfBoard == 0 && isPawnInOpponentList == 1 && isPawnInPlayerList == 0) {
             isPawnInOpponentListAfterEat = isPawnInList(opponentList, pawnPlayerChecked, 2, -2);
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, 2, -2);
-        
+
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Right move is possible\n");
+                // printf("Right move is possible\n");
                 isMoveToRight = 1;
             }
         }
-        
+
         isMoveIsOutOfBoard = 0;
         // On vérifie si le pion y-1 x-1 appartient à la liste de l'opposant
         isPawnInOpponentList = isPawnInList(opponentList, pawnPlayerChecked, -1, -1);
@@ -471,9 +453,9 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         if (isMoveIsOutOfBoard == 0 && isPawnInOpponentList == 1 && isPawnInPlayerList == 0) {
             isPawnInOpponentListAfterEat = isPawnInList(opponentList, pawnPlayerChecked, -2, -2);
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, -2, -2);
-            
+
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Left move is possible\n");
+                //printf("Left move is possible\n");
                 isMoveToLeft = 1;
             }
         }
@@ -488,7 +470,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         if (isPawnInOpponentList == 0) {
             isPawnInPlayerList = isPawnInList(playerList, pawnPlayerChecked, 1, 1);
         }
-        
+
         // On vérifie si le déplacement y+2 x+2 est >0 et <9
         if (isPawnInOpponentList == 1 || isPawnInPlayerList == 1 || isPawnInPlayerList == 0) {
 
@@ -503,11 +485,11 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, 2, 2);
 
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Reverse right move is possible\n");
+                // printf("Reverse right move is possible\n");
                 isMoveToReverseRight = 1;
             }
         }
-        
+
         // On vérifie si le pion y+1 x-1 appartient à la liste de l'opposant
         isPawnInOpponentList = isPawnInList(opponentList, pawnPlayerChecked, -1, 1);
 
@@ -526,9 +508,9 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         if (isMoveIsOutOfBoard == 0 && isPawnInOpponentList == 1 && isPawnInPlayerList == 0) {
             isPawnInOpponentListAfterEat = isPawnInList(opponentList, pawnPlayerChecked, -2, 2);
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, -2, 2);
-            
+
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Reverse left move is possible\n");
+                // printf("Reverse left move is possible\n");
                 isMoveToReverseLeft = 1;
             }
         }
@@ -556,7 +538,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, 2, 2);
 
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Right move is possible\n");
+                // printf("Right move is possible\n");
                 isMoveToRight = 1;
             }
         }
@@ -580,7 +562,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             isPawnInOpponentListAfterEat = isPawnInList(opponentList, pawnPlayerChecked, -2, 2);
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, -2, 2);
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Left move is possible\n");
+                // printf("Left move is possible\n");
                 isMoveToLeft = 1;
             }
         }
@@ -607,7 +589,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, 2, -2);
 
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Reverse right move is possible\n");
+                // printf("Reverse right move is possible\n");
                 isMoveToReverseRight = 1;
             }
         }
@@ -631,7 +613,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             isPawnInOpponentListAfterEat = isPawnInList(opponentList, pawnPlayerChecked, -2, -2);
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, -2, -2);
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Reverse left move is possible\n");
+                // printf("Reverse left move is possible\n");
                 isMoveToReverseLeft = 1;
             }
         }
@@ -644,17 +626,17 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
 }
 
 int isPawnInList(pawn_t* list, pawn_t *pawnPlayerChecked, int coordX, int coordY){
-        while (list != NULL) {
-            if (list->_coord_x == pawnPlayerChecked->_coord_x+coordX
-                    && list->_coord_y == pawnPlayerChecked->_coord_y+coordY
-                    && list->_state == ALIVE){
-                        return 1;
-                        break;
-                    } else {
-                        list = list->p_next;
-                    }
+    while (list != NULL) {
+        if (list->_coord_x == pawnPlayerChecked->_coord_x+coordX
+        && list->_coord_y == pawnPlayerChecked->_coord_y+coordY
+        && list->_state == ALIVE){
+            return 1;
+            break;
+        } else {
+            list = list->p_next;
         }
-        return 0;
+    }
+    return 0;
 }
 
 int IsMandatoryDraughtValid(player_t *opponent, pawn_t *pawnPlayerChecked, pawn_t *pawnOpponentChecked)
@@ -666,14 +648,6 @@ int IsMandatoryDraughtValid(player_t *opponent, pawn_t *pawnPlayerChecked, pawn_
     {
         while(pawnsOpponent != NULL)
         {
-            // printf("\nNO\n");
-            // printf("O->_coord_x = %d\n", pawnsOpponent->_coord_x);
-            // printf("O->_coord_y = %d\n", pawnsOpponent->_coord_y);
-            // printf("C->_coord_x = %d\n", pawnOpponentChecked->_coord_x);
-            // printf("C->_coord_y = %d\n", pawnOpponentChecked->_coord_y);
-            // printf("P_X - C_X = %d\n", pawnPlayerChecked->_coord_x - pawnOpponentChecked->_coord_x);
-            // printf("P_Y - C_Y = %d\n", pawnPlayerChecked->_coord_y - pawnOpponentChecked->_coord_y);
-
             if (pawnsOpponent->_coord_x == pawnOpponentChecked->_coord_x - 1
             && pawnsOpponent->_coord_y == pawnOpponentChecked->_coord_y - 1
             && pawnOpponentChecked->_coord_x - 1 < 0

@@ -48,9 +48,6 @@ void game(int IA_J1, int IA_J2)
 
             // Il bouge un pion
             movePawnByPlayer(J1, J2);
-
-            // On affiche le terrain après le déplacement
-            //displayBoard(J1, J2);
         }
 
         // Au tour de J2
@@ -63,9 +60,6 @@ void game(int IA_J1, int IA_J2)
 
             // Il bouge un pion
             movePawnByPlayer(J2, J1);
-
-            // On affiche le terrain après le déplacement
-            //displayBoard(J1, J2);
         }
     }
 
@@ -93,8 +87,6 @@ void saveLog(char color, int initMoveX, int initMoveY, int finalMoveX, int final
     snprintf(input, sizeof input, "%c / %d %d / %d %d\n", color, initMoveX, initMoveY, finalMoveX, finalMoveY);
 
     // Vérification que l'écriture dans le fichier s'est bien passée
-    // Couleur / coordonnées initiales / coordonnées finales
-    // W / 1 0 / 2 1
     if (fputs(input, fp) == EOF) { // Texte à ajouter dans le fichier
         fputs("Erreur lors de l'ecriture d'une ligne\n", stderr);
         exit(-2);
@@ -109,10 +101,10 @@ void saveLog(char color, int initMoveX, int initMoveY, int finalMoveX, int final
 }
 
 void saveGame(player_t *player, player_t *opponent) {
-    char input[30];
+    char input[440];
 
     // Ouverture du fichier en écriture ou création du fichier
-    FILE *fp = fopen("./save/save.txt", "r");
+    FILE *fp = fopen("./save/save.txt", "w");
 
     // Vérification si l'ouverture du fichier s'est bien passée
     if (fp == NULL)
@@ -121,31 +113,23 @@ void saveGame(player_t *player, player_t *opponent) {
         exit(-1);
     }
 
-    pawn_t* playerList = malloc(sizeof(pawn_t));
-    pawn_t* opponentList = malloc(sizeof(pawn_t));
-    playerList = player->p_listPawn->p_head;
-    opponentList = opponent->p_listPawn->p_head;
+    pawn_t* playerList = player->p_listPawn->p_head;
+    pawn_t* opponentList = opponent->p_listPawn->p_head;
 
     while (playerList != NULL) {
-        snprintf(input, sizeof input, "%c/%d/%d/%c/%c\n", 
+        snprintf(input, sizeof input, "%c/%d/%d/%c/%c\n",
             player->_couleur, playerList->_coord_x, playerList->_coord_y, playerList->_state, playerList->_status);
-        fputs(input, fp);
         playerList = playerList->p_next;
     }
-    fclose(fp);
 
-    fp = fopen("./save/save.txt", "a");
     while (opponentList != NULL) {
-        snprintf(input, sizeof input, "%c/%d/%d/%c/%c\n", 
+        snprintf(input, sizeof input, "%c/%d/%d/%c/%c\n",
             opponent->_couleur, opponentList->_coord_x, opponentList->_coord_y, opponentList->_state, opponentList->_status);
-        fputs(input, fp);
         opponentList = opponentList->p_next;
     }
 
-    // Vérification que l'écriture dans le fichier s'est bien passée
-    // couleur / """ID""" / coord_x / coord_y / state / status
-    // W/1/6/4/V/P
-
+    // On écrit la liste des pions dans le fichier ouvert
+    fputs(input, fp);
 
     // Vérification que la fermeture du fichier s'est bien passée
     if (fclose(fp) == EOF)
@@ -153,6 +137,7 @@ void saveGame(player_t *player, player_t *opponent) {
         fputs("Erreur lors de la fermeture du flux\n", stderr);
         exit(-3);
     }
+
     free(playerList);
     free(opponentList);
 }

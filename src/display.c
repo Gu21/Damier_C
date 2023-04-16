@@ -11,7 +11,7 @@ int menu(void)
     printf("3) Load game\n");
     printf("4) Quit\n");
     printf("Please choose an option : ");
-    printf("\n");
+    //printf("\n");
 
     scanf("%d", &userChoice);
     rewind(stdin);
@@ -23,8 +23,6 @@ void displayBoard(player_t *pPlayer1, player_t *pPlayer2) {
 
     char board[BOARD_SIZE][BOARD_SIZE];
     int pionPlace = 0;
-    //pawn_t *currentPawnPlayer1 = malloc(sizeof(pawn_t));
-    //pawn_t *currentPawnPlayer2 = malloc(sizeof(pawn_t));
     pawn_t* currentPawnPlayer1 = pPlayer1->p_listPawn->p_head;
     pawn_t* currentPawnPlayer2 = pPlayer2->p_listPawn->p_head;
 
@@ -61,20 +59,23 @@ void displayBoard(player_t *pPlayer1, player_t *pPlayer2) {
                 }
             }
 
-            // Vérification de la liste de pions du joueur deux
-            while (currentPawnPlayer2 != NULL)
+            if(pionPlace == 0)
             {
-                if (currentPawnPlayer2->_coord_x == incr_column
-                && currentPawnPlayer2->_coord_y == incr_row
-                && currentPawnPlayer2->_state == ALIVE) {
-                    if(currentPawnPlayer2->_status == PAWN)
-                        board[incr_column][incr_row] = BLACK_PAWN;
-                    else
-                        board[incr_column][incr_row] = BLACK_DRAUGHT;
-                    pionPlace = 1;
-                    break;
-                } else {
-                    currentPawnPlayer2 = currentPawnPlayer2->p_next;
+                // Vérification de la liste de pions du joueur deux
+                while (currentPawnPlayer2 != NULL)
+                {
+                    if (currentPawnPlayer2->_coord_x == incr_column
+                    && currentPawnPlayer2->_coord_y == incr_row
+                    && currentPawnPlayer2->_state == ALIVE) {
+                        if(currentPawnPlayer2->_status == PAWN)
+                            board[incr_column][incr_row] = BLACK_PAWN;
+                        else
+                            board[incr_column][incr_row] = BLACK_DRAUGHT;
+                        pionPlace = 1;
+                        break;
+                    } else {
+                        currentPawnPlayer2 = currentPawnPlayer2->p_next;
+                    }
                 }
             }
 

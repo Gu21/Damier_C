@@ -42,3 +42,5 @@ Liste erreurs :
 -2 : Cannot write in a file
 -3 : File cannot be closed
 -4 : Pointer null
+0  : Fin du programme normale
++1 : Programme quitté suite à une sauvegarde

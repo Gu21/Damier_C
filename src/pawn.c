@@ -149,7 +149,7 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
                         // et que sa coordonnée Y est à +1 de celle du pion du joueur
                         // et que le pion de l'adversaire est encore en vie
                         if ((pawnOpponentChecked->_coord_x-1 == pawnPlayerChecked->_coord_x || pawnOpponentChecked->_coord_x+1 == pawnPlayerChecked->_coord_x)
-                        && pawnOpponentChecked->_coord_y+1 == pawnPlayerChecked->_coord_y
+                        && (pawnOpponentChecked->_coord_y+1 == pawnPlayerChecked->_coord_y || pawnOpponentChecked->_coord_y-1 == pawnPlayerChecked->_coord_y)
                         && pawnOpponentChecked->_state == ALIVE)
                         {
                             printf("Pion en cours de verification X:%d Y:%d\n", pawnPlayerChecked->_coord_x, pawnPlayerChecked->_coord_y);
@@ -175,7 +175,7 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
                         // et que sa coordonnée Y est à -1 de celle du pion du joueur
                         // et que le pion de l'adversaire est encore en vie
                         if ((pawnOpponentChecked->_coord_x-1 == pawnPlayerChecked->_coord_x || pawnOpponentChecked->_coord_x+1 == pawnPlayerChecked->_coord_x)
-                        && pawnOpponentChecked->_coord_y-1 == pawnPlayerChecked->_coord_y
+                        && (pawnOpponentChecked->_coord_y-1 == pawnPlayerChecked->_coord_y || pawnOpponentChecked->_coord_y+1 == pawnPlayerChecked->_coord_y)
                         && pawnOpponentChecked->_state == ALIVE)
                         {
                             printf("Pion en cours de verification X:%d Y:%d\n", pawnPlayerChecked->_coord_x, pawnPlayerChecked->_coord_y);
@@ -362,7 +362,7 @@ void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, in
             while (pawnChecked != NULL)
             {
                 if ((pawnChecked->_coord_x == initX+1 || pawnChecked->_coord_x == initX-1)
-                 && pawnChecked->_coord_y == initY-1) {
+                 && (pawnChecked->_coord_y == initY-1 || pawnChecked->_coord_y == initY+1)) {
                     // On a mangé ce pion
                     updatePawnState(pawnChecked, opponent);
                     break;
@@ -374,7 +374,7 @@ void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, in
             while (pawnChecked != NULL)
             {
                 if ((pawnChecked->_coord_x == initX+1 || pawnChecked->_coord_x == initX-1)
-                 && pawnChecked->_coord_y == initY+1) {
+                 && (pawnChecked->_coord_y == initY+1 || pawnChecked->_coord_y == initY-1)) {
                     // On a mangé ce pion
                     updatePawnState(pawnChecked, opponent);
                     break;
@@ -395,7 +395,9 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
     int isPawnInPlayerListAfterEat = 0;
     int isMoveIsOutOfBoard = 0;
     int isMoveToRight = 0;
+    int isMoveToReverseRight = 0;
     int isMoveToLeft = 0;
+    int isMoveToReverseLeft = 0;
     pawn_t* opponentList = opponent->p_listPawn->p_head;
     pawn_t* playerList = player->p_listPawn->p_head;
 
@@ -422,11 +424,12 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, 2, -2);
         
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Mouvement possible a droite\n");
+                printf("Right move is possible\n");
                 isMoveToRight = 1;
             }
         }
         
+        isMoveIsOutOfBoard = 0;
         // On vérifie si le pion y-1 x-1 appartient à la liste de l'opposant
         isPawnInOpponentList = isPawnInList(opponentList, pawnPlayerChecked, -1, -1);
 
@@ -447,8 +450,63 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, -2, -2);
             
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Mouvement possible a gauche\n");
+                printf("Left move is possible\n");
                 isMoveToLeft = 1;
+            }
+        }
+
+
+        // CAS pion blanc (y+1)
+        isMoveIsOutOfBoard = 0;
+        // On vérifie si le pion y+1 x+1 appartient à la liste de l'opposant
+        isPawnInOpponentList = isPawnInList(opponentList, pawnPlayerChecked, 1, 1);
+
+        // On vérifie si le pion y+1 x+1 appartient à la liste du joueur
+        if (isPawnInOpponentList == 0) {
+            isPawnInPlayerList = isPawnInList(playerList, pawnPlayerChecked, 1, 1);
+        }
+        
+        // On vérifie si le déplacement y+2 x+2 est >0 et <9
+        if (isPawnInOpponentList == 1 || isPawnInPlayerList == 1 || isPawnInPlayerList == 0) {
+
+            if (pawnPlayerChecked->_coord_x+2 < 0 || pawnPlayerChecked->_coord_x+2 > 9
+                    || pawnPlayerChecked->_coord_y+2 < 0 || pawnPlayerChecked->_coord_y+2 > 9){
+                        isMoveIsOutOfBoard = 1;
+                    }
+        }
+        // On vérifie si un pion de la liste du joueur ou de l'opposant est présent sur la case y+2 x+2
+        if (isMoveIsOutOfBoard == 0 && isPawnInOpponentList == 1 && isPawnInPlayerList == 0) {
+            isPawnInOpponentListAfterEat = isPawnInList(opponentList, pawnPlayerChecked, 2, 2);
+            isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, 2, 2);
+
+            if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
+                printf("Reverse right move is possible\n");
+                isMoveToReverseRight = 1;
+            }
+        }
+        
+        // On vérifie si le pion y+1 x-1 appartient à la liste de l'opposant
+        isPawnInOpponentList = isPawnInList(opponentList, pawnPlayerChecked, -1, 1);
+
+        if (isPawnInOpponentList == 0) {
+            // On vérifie si le pion y+1 x-1 appartient à la liste du joueur
+            isPawnInPlayerList = isPawnInList(playerList, pawnPlayerChecked, -1, 1);
+        }
+        // On vérifie si le déplacement y+2 x-2 est >0 et <9
+        if (isPawnInOpponentList == 1 || isPawnInPlayerList == 1 || isPawnInPlayerList == 0) {
+            if (pawnPlayerChecked->_coord_x-2 < 0 || pawnPlayerChecked->_coord_x-2 > 9
+                    || pawnPlayerChecked->_coord_y+2 < 0 || pawnPlayerChecked->_coord_y+2 > 9){
+                        isMoveIsOutOfBoard = 1;
+                    }
+        }
+        // On vérifie si un pion de la liste du joueur ou de l'opposant est présent sur la case y+2 x-2
+        if (isMoveIsOutOfBoard == 0 && isPawnInOpponentList == 1 && isPawnInPlayerList == 0) {
+            isPawnInOpponentListAfterEat = isPawnInList(opponentList, pawnPlayerChecked, -2, 2);
+            isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, -2, 2);
+            
+            if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
+                printf("Reverse left move is possible\n");
+                isMoveToReverseLeft = 1;
             }
         }
     }
@@ -475,11 +533,12 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, 2, 2);
 
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Mouvement possible a droite\n");
+                printf("Right move is possible\n");
                 isMoveToRight = 1;
             }
         }
 
+        isMoveIsOutOfBoard = 0;
         // On vérifie si le pion y+1 x-1 appartient à la liste de l'opposant
         isPawnInOpponentList = isPawnInList(opponentList, pawnPlayerChecked, -1, 1);
         if (isPawnInOpponentList == 0) {
@@ -498,12 +557,63 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             isPawnInOpponentListAfterEat = isPawnInList(opponentList, pawnPlayerChecked, -2, 2);
             isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, -2, 2);
             if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
-                printf("Mouvement possible a gauche\n");
+                printf("Left move is possible\n");
                 isMoveToLeft = 1;
             }
         }
+
+        // CAS pion noir (y-1)
+        isMoveIsOutOfBoard = 0;
+        // On vérifie si le pion y-1 x+1 appartient à la liste de l'opposant
+        isPawnInOpponentList = isPawnInList(opponentList, pawnPlayerChecked, 1, -1);
+
+        if (isPawnInOpponentList == 0) {
+            // On vérifie si le pion y-1 x+1 appartient à la liste du joueur
+            isPawnInPlayerList = isPawnInList(playerList, pawnPlayerChecked, 1, -1);
+        }
+        // On vérifie si le déplacement y-2 x+2 est >0 et <9
+        if (isPawnInOpponentList == 1 || isPawnInPlayerList == 1 || isPawnInPlayerList == 0) {
+            if (pawnPlayerChecked->_coord_x+2 < 0 || pawnPlayerChecked->_coord_x+2 > 9
+                    || pawnPlayerChecked->_coord_y-2 < 0 || pawnPlayerChecked->_coord_y-2 > 9){
+                        isMoveIsOutOfBoard = 1;
+                    }
+        }
+        // On vérifie si un pion de la liste du joueur ou de l'opposant est présent sur la case y-2 x+2
+        if (isMoveIsOutOfBoard == 0 && isPawnInOpponentList == 1 && isPawnInPlayerList == 0) {
+            isPawnInOpponentListAfterEat = isPawnInList(opponentList, pawnPlayerChecked, 2, -2);
+            isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, 2, -2);
+
+            if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
+                printf("Reverse right move is possible\n");
+                isMoveToReverseRight = 1;
+            }
+        }
+
+        isMoveIsOutOfBoard = 0;
+        // On vérifie si le pion y-1 x-1 appartient à la liste de l'opposant
+        isPawnInOpponentList = isPawnInList(opponentList, pawnPlayerChecked, -1, -1);
+        if (isPawnInOpponentList == 0) {
+            // On vérifie si le pion y-1 x-1 appartient à la liste du joueur
+            isPawnInPlayerList = isPawnInList(playerList, pawnPlayerChecked, -1, -1);
+        }
+        // On vérifie si le déplacement y-2 x-2 est >0 et <9
+        if (isPawnInOpponentList == 1 || isPawnInPlayerList == 1 || isPawnInPlayerList == 0) {
+            if (pawnPlayerChecked->_coord_x-2 < 0 || pawnPlayerChecked->_coord_x-2 > 9
+                    || pawnPlayerChecked->_coord_y-2 < 0 || pawnPlayerChecked->_coord_y-2 > 9){
+                        isMoveIsOutOfBoard = 1;
+                    }
+        }
+        // On vérifie si un pion de la liste du joueur ou de l'opposant est présent sur la case y-2 x-2
+        if (isMoveIsOutOfBoard == 0 && isPawnInOpponentList == 1 && isPawnInPlayerList == 0) {
+            isPawnInOpponentListAfterEat = isPawnInList(opponentList, pawnPlayerChecked, -2, -2);
+            isPawnInPlayerListAfterEat = isPawnInList(playerList, pawnPlayerChecked, -2, -2);
+            if (isPawnInOpponentListAfterEat == 0 && isPawnInPlayerListAfterEat == 0) {
+                printf("Reverse left move is possible\n");
+                isMoveToReverseLeft = 1;
+            }
+        }
     }
-    if(isMoveToLeft == 1 || isMoveToRight == 1){
+    if(isMoveToLeft == 1 || isMoveToRight == 1 || isMoveToReverseLeft == 1 || isMoveToReverseRight == 1){
         return 1;
     } else {
         return 0;
@@ -515,7 +625,6 @@ int isPawnInList(pawn_t* list, pawn_t *pawnPlayerChecked, int coordX, int coordY
             if (list->_coord_x == pawnPlayerChecked->_coord_x+coordX
                     && list->_coord_y == pawnPlayerChecked->_coord_y+coordY
                     && list->_state == ALIVE){
-                        printf("Le pion est present dans la liste\n");
                         return 1;
                         break;
                     } else {

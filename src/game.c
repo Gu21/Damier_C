@@ -11,7 +11,7 @@ void game(int IA_J1, int IA_J2)
     // Initialisation du Joueur 1
     if(IA_J1 == 0) // Le joueur 1 n'est pas une IA
     {
-        printf("\nJoueur 1, veuillez saisir votre nom : ");
+        printf("\nPlayer 1, please enter your name : ");
         scanf("%s", J1_name);
         rewind(stdin);
     }
@@ -21,7 +21,7 @@ void game(int IA_J1, int IA_J2)
     // Initialisation du Joueur 2
     if(IA_J2 == 0) // Le joueur 2 n'est pas une IA
     {
-        printf("\nJoueur 2, veuillez saisir votre nom : ");
+        printf("\nPlayer 2, please enter your name : ");
         scanf("%s", J2_name);
         rewind(stdin);
     }
@@ -41,7 +41,7 @@ void game(int IA_J1, int IA_J2)
         // Au tour de J1
         if(J1->_score < 20 && J2->_score < 20)
         {
-            printf("\nAu tour de %s\n", J1->_nom);
+            printf("\nTurn of %s\n", J1->_nom);
 
             // On affiche le terrain
             displayBoard(J1, J2);
@@ -56,7 +56,7 @@ void game(int IA_J1, int IA_J2)
         // Au tour de J2
         if(J1->_score < 20 && J2->_score < 20)
         {
-            printf("\nAu tour de %s\n", J2->_nom);
+            printf("\nTurn of %s\n", J2->_nom);
 
             // On affiche le terrain
             displayBoard(J1, J2);

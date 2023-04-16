@@ -21,14 +21,15 @@
 
 
 // LOCAL INCLUDE(S)
+#include "game.h"
 
 
 // PROTOTYPE(S)
-int menu(void);                                                                 // Menu de sélection
-void displayBoard(player_t *pPlayer1, player_t *pPlayer2);                      // Affichage du plateau
-void displayPlayer(void);                                                       // Affichage des joueurs
-void displayScore(void);                                                        // Affichage score des joueurs
-void endGame(player_t *pPlayer1, player_t *pPlayer2);                           // Affichage de fin de partie. Annonce le gagnant
-void displayMove(int initMoveX, int initMoveY, int finalMoveX, int finalMoveY); // Affichage du déplacement d'un pion
+int menu(void);                                                                             // Menu de sélection
+void displayBoard(player_t *pPlayer1, player_t *pPlayer2);                                  // Affichage du plateau
+void displayPlayer(void);                                                                   // Affichage des joueurs
+void displayScore(void);                                                                    // Affichage score des joueurs
+void endGame(player_t *pPlayer1, player_t *pPlayer2);                                       // Affichage de fin de partie. Annonce le gagnant
+void displayMove(char color, int initMoveX, int initMoveY, int finalMoveX, int finalMoveY); // Affichage du déplacement d'un pion
 
 #endif /* !display_H_ */

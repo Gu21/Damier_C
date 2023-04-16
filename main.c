@@ -15,15 +15,15 @@ int main()
                 break;
 
             case 2:     // PvE
-                game(0, 1);
-                break;
+                //game(0, 1);
+                printf("Et bah nan, on a eu la flemme de faire une IA, bonne journee !\n");
+                return 0;
 
             case 3:
                 break;
 
             case 4:     // Quitter
                 return 0;
-                break;
 
             default:
                 printf("Choix inconnu");

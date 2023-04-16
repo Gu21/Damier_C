@@ -77,23 +77,26 @@ void game(int IA_J1, int IA_J2)
     free(J2);
 }
 
-void saveGame(void) {
+void saveLog(char color, int initMoveX, int initMoveY, int finalMoveX, int finalMoveY) {
+
+    char input[15];
     // Ouverture du fichier en écriture ou création du fichier
-    FILE *fp = fopen("save.txt", "a");
+    FILE *fp = fopen("./log/log.txt", "a");
 
     // Vérification si l'ouverture du fichier s'est bien passée
     if (fp == NULL)
     {
-        printf("Le fichier save.txt n'a pas pu être ouvert\n");
+        printf("Le fichier log.txt n'a pas pu être ouvert\n");
         exit(-1);
     }
 
+    snprintf(input, sizeof input, "%c / %d %d / %d %d\n", color, initMoveX, initMoveY, finalMoveX, finalMoveY);
+
     // Vérification que l'écriture dans le fichier s'est bien passée
-    // couleur / """ID""" / coord_x / coord_y / state / status
-    // W/1/6/4/V/P
-    if (fputs("TEXTE A AJOUTER DANS LE FICHIER", fp) == EOF) // Texte à ajouter dans le fichier
-    {
-        fputs("Erreur lors de l'écriture d'une ligne\n", stderr);
+    // Couleur / coordonnées initiales / coordonnées finales
+    // W / 1 0 / 2 1
+    if (fputs(input, fp) == EOF) { // Texte à ajouter dans le fichier
+        fputs("Erreur lors de l'ecriture d'une ligne\n", stderr);
         exit(-2);
     }
 
@@ -105,6 +108,33 @@ void saveGame(void) {
     }
 }
 
+void saveGame(void) {
+    // Ouverture du fichier en écriture ou création du fichier
+    FILE *fp = fopen("save.txt", "a");
+
+    // Vérification si l'ouverture du fichier s'est bien passée
+    if (fp == NULL)
+    {
+        printf("Le fichier save.txt n'a pas pu etre ouvert\n");
+        exit(-1);
+    }
+
+    // Vérification que l'écriture dans le fichier s'est bien passée
+    // couleur / """ID""" / coord_x / coord_y / state / status
+    // W/1/6/4/V/P
+    if (fputs("TEXTE A AJOUTER DANS LE FICHIER", fp) == EOF) // Texte à ajouter dans le fichier
+    {
+        fputs("Erreur lors de l'ecriture d'une ligne\n", stderr);
+        exit(-2);
+    }
+
+    // Vérification que la fermeture du fichier s'est bien passée
+    if (fclose(fp) == EOF)
+    {
+        fputs("Erreur lors de la fermeture du flux\n", stderr);
+        exit(-3);
+    }
+}
 
 void loadGame(void) {
 

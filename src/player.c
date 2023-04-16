@@ -29,84 +29,119 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
     int tempFinalX = 0;
     int tempFinalY = 0;
     int MovingPawnSelected = 0;
+    int continueMove = 1;
+    int dejaJouer = 0;
 
     pawn_t* tempPawn = player->p_listPawn->p_head;
 
-    // On vérifie si le joueur a un déplacement obligatoire à faire
-    checkMandatoryMove(player, opponent, movingPawn);
+    while(continueMove == 1)
+    {
+        // c'est crade putain
+        movingPawn->_coord_x = 0;
+        movingPawn->_coord_y = 0;
+        movingPawn->_status = 'P';
+        movingPawn->_state = 'V';
+        movingPawn->p_next = NULL;
+        movingPawn->p_previous = NULL;
 
-    // S'il n'y a pas de mouvement obligatoire
-    if (movingPawn->_coord_x == 0 && movingPawn->_coord_y == 0) {
-        while(MovingPawnSelected == 0)
-        {
-            // On demande les coordonnées initiales du pion à déplacer
-            printf("Please enter X and Y initial coordinate with format X Y : ");
-            scanf("%d %d", &tempInitX, &tempInitY);
-            rewind(stdin);
+        // On vérifie si le joueur a un déplacement obligatoire à faire
+        checkMandatoryMove(player, opponent, movingPawn);
 
-            if (tempInitX >= 0 && tempInitX <= 9 && tempInitY >= 0 && tempInitY <= 9)
+        // S'il n'y a pas de mouvement obligatoire
+        if (movingPawn->_coord_x == 0 && movingPawn->_coord_y == 0) {
+            continueMove = 0;
+
+            if(dejaJouer == 0)
             {
-                tempPawn = player->p_listPawn->p_head;
-
-                // On sélectionne le pion choisi par le joueur
-                while(tempPawn != NULL)
+                while(MovingPawnSelected == 0)
                 {
-                    // Si le pion lu a les coordonnées spécifiées
-                    if(tempPawn->_coord_x == tempInitX
-                    && tempPawn->_coord_y == tempInitY)
+                    // On demande les coordonnées initiales du pion à déplacer
+                    printf("Please enter X and Y initial coordinate with format X Y : ");
+                    scanf("%d %d", &tempInitX, &tempInitY);
+                    rewind(stdin);
+
+                    if (tempInitX >= 0 && tempInitX <= 9 && tempInitY >= 0 && tempInitY <= 9)
                     {
-                        if(checkAllMoves(player, opponent, tempPawn) > 0)
+                        tempPawn = player->p_listPawn->p_head;
+
+                        // On sélectionne le pion choisi par le joueur
+                        while(tempPawn != NULL)
                         {
-                            // On récupère ce pion
-                            movingPawn = tempPawn;
-                            MovingPawnSelected = 1;
-                            break;
-                        }
-                        else
-                        {
-                            printf("Selected pawn has no available move.\n");
-                            // Sinon on passe au pion suivant
-                            tempPawn = tempPawn->p_next;
+                            // Si le pion lu a les coordonnées spécifiées
+                            if(tempPawn->_coord_x == tempInitX
+                            && tempPawn->_coord_y == tempInitY)
+                            {
+                                if(checkAllMoves(player, opponent, tempPawn) > 0)
+                                {
+                                    // On récupère ce pion
+                                    movingPawn = tempPawn;
+                                    MovingPawnSelected = 1;
+                                    break;
+                                }
+                                else
+                                {
+                                    printf("Selected pawn has no available move.\n");
+                                    // Sinon on passe au pion suivant
+                                    tempPawn = tempPawn->p_next;
+                                }
+                            }
+                            else
+                            {
+                                // Sinon on passe au pion suivant
+                                tempPawn = tempPawn->p_next;
+                            }
                         }
                     }
-                    else
+
+                    if(MovingPawnSelected == 0)
                     {
-                        // Sinon on passe au pion suivant
-                        tempPawn = tempPawn->p_next;
+                        // Il n'y a pas de pion aux coordonnées saisies
+                        printf("Invalid coordinates.\n");
                     }
                 }
             }
-
-            if(MovingPawnSelected == 0)
-            {
-                // Il n'y a pas de pion aux coordonnées saisies
-                printf("Invalid coordinates.\n");
-            }
         }
-    }
-    else
-    {
-        // On informe le joueur qu'il doit bouger un pion spécifique
-        printf("You have to move the pawn on %d %d.\n", movingPawn->_coord_x, movingPawn->_coord_y);
-    }
-
-    while(1)
-    {
-        // On demande au joueur où il veut déplacer son pion
-        printf("Please enter X and Y final coordinate with format X Y : ");
-        scanf("%d %d", &tempFinalX, &tempFinalY);
-        rewind(stdin);
-
-        // On vérifie si le déplacement est possible
-        if (checkAuthorizedMove(player, opponent, movingPawn, tempFinalX, tempFinalY) == 1)
-            break;
         else
-            printf("Unauthorized move. Try again.\n");
-    }
+        {
+            if(dejaJouer == 1)
+            {
+                if(player->_couleur == COLOR_W)
+                {
+                    displayBoard(player, opponent);
+                }
+                else
+                {
+                    displayBoard(opponent, player);
+                }
+            }
 
-    // TODO : va falloir fix ce truc horrible pour retourner dans la liste
-    // ça pue le cul, mais au moins ça marche, et j'ai pas le temps de le corriger
-    movePawn(movingPawn->p_previous->p_next, opponent, player->_couleur, tempFinalX, tempFinalY);
+            // On informe le joueur qu'il doit bouger un pion spécifique
+            printf("You have to move the pawn on %d %d.\n", movingPawn->_coord_x, movingPawn->_coord_y);
+        }
+
+        if(!(dejaJouer == 1 && continueMove == 0))
+        {
+            while(1)
+            {
+                // On demande au joueur où il veut déplacer son pion
+                printf("Please enter X and Y final coordinate with format X Y : ");
+                scanf("%d %d", &tempFinalX, &tempFinalY);
+                rewind(stdin);
+
+                // On vérifie si le déplacement est possible
+                if (checkAuthorizedMove(player, opponent, movingPawn, tempFinalX, tempFinalY) == 1)
+                    break;
+                else
+                    printf("Unauthorized move. Try again.\n");
+            }
+
+            // TODO : va falloir fix ce truc horrible pour retourner dans la liste
+            // ça pue le cul, mais au moins ça marche, et j'ai pas le temps de le corriger
+            movePawn(movingPawn->p_previous->p_next, opponent, player->_couleur, tempFinalX, tempFinalY);
+        }
+
+        dejaJouer = 1;
+    }
 
     // free(tempPawn);
     //free(movingPawn);

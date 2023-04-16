@@ -11,9 +11,9 @@ Création d'un jeu de Dame : Player VS Player
 // - Le nombre de pieces blanches restantes.
 
 
-- Chaque déplacement d'une partie doit etre log dans un fichier.
-Couleur / coordonnées initiales / coordonnées finales
-W / 1 0 / 2 1
+// - Chaque déplacement d'une partie doit etre log dans un fichier.
+// Couleur / coordonnées initiales / coordonnées finales
+// W / 1 0 / 2 1
 
 // - Utiliser une liste chainee
 // - Malloc et free.

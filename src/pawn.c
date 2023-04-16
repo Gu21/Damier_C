@@ -33,8 +33,9 @@ void initPawn(pawn_header_t *liste_chaine, int i, char couleur)
         //On initialise les valeurs par défaut.
         pion->_coord_x = 0;
         pion->_coord_y = 0;
-        pion->_status = 'P';
-        pion->_state = 'V';
+        //pion->_status = PAWN;
+        pion->_status = QUEEN;
+        pion->_state = ALIVE;
         pion->p_next = NULL;
         pion->p_previous = NULL;
 
@@ -161,7 +162,6 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
                                 // Sinon on passe au pion adversaire suivant
                                 pawnOpponentChecked = pawnOpponentChecked->p_next;
                             }
-                            
                         }
                         else
                         {
@@ -188,7 +188,6 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
                                 // Sinon on passe au pion adversaire suivant
                                 pawnOpponentChecked = pawnOpponentChecked->p_next;
                             }
-                            
                         }
                         else
                         {
@@ -198,15 +197,32 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
                     }
                 }
             }
-            else
+            else // Fonctionnement pour la reine
             {
-                //Fonctionnement pour la reine. Osef actuellement
-                // On vérifie s'il y a un pion adverse dans les 4 directions, et ce, même si plusieurs cases les sépare
-                    // Si c'est le cas, on vérifie s'il y a au moins une case de libre juste après le pion
-                        // Si c'est le cas, movingPawn = pion
-                        // On quitte la fonction
-                    // Sinon on continue
-                // sinon on continue
+                // Bon, elle me casse les noix cette reine, elle a qu'à marcher comme un pion
+                /*while(pawnOpponentChecked != NULL)
+                {
+                    if (abs(pawnOpponentChecked->_coord_x-pawnPlayerChecked->_coord_x) == abs(pawnOpponentChecked->_coord_y-pawnPlayerChecked->_coord_y))
+                    {
+                        // Si le déplacement est possible
+                        if(IsMandatoryDraughtValid(opponent, pawnPlayerChecked, pawnOpponentChecked) == 1)
+                        {
+                            // On peut manger
+                            *movingPawn = *pawnPlayerChecked;
+                            return;
+                        }
+                        else
+                        {
+                            // Sinon on passe au pion adversaire suivant
+                            pawnOpponentChecked = pawnOpponentChecked->p_next;
+                        }
+                    }
+                    else
+                    {
+                        // Sinon on passe au pion adversaire suivant
+                        pawnOpponentChecked = pawnOpponentChecked->p_next;
+                    }
+                }*/
             }
         }
 
@@ -235,7 +251,7 @@ int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn
         // Vérifier si le joueur est blanc
         if (player->_couleur == COLOR_W) {
             // Déplacement interdit sur l'axe Y pour le pion blanc
-            if ((movingPawn->_coord_y <= tempFinalY) 
+            if ((movingPawn->_coord_y <= tempFinalY)
             || ((abs(movingPawn->_coord_y - tempFinalY) != 1)
                && (abs(movingPawn->_coord_y - tempFinalY) != 2))
             || (abs(movingPawn->_coord_y - tempFinalY) != abs(movingPawn->_coord_x - tempFinalX))) {
@@ -252,7 +268,7 @@ int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn
 
         } else {
             // Déplacement interdit sur l'axe Y pour le pion noir
-            if ((movingPawn->_coord_y >= tempFinalY) 
+            if ((movingPawn->_coord_y >= tempFinalY)
             || ((abs(movingPawn->_coord_y - tempFinalY) != 1)
                && (abs(movingPawn->_coord_y - tempFinalY) != 2))
             || (abs(movingPawn->_coord_y - tempFinalY) != abs(movingPawn->_coord_x - tempFinalX))) {
@@ -369,7 +385,7 @@ void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, in
         }
     }
 
-    displayMove(initX, initY, finalX, finalY);
+    displayMove(color, initX, initY, finalX, finalY);
 }
 
 int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlayerChecked) {
@@ -385,7 +401,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         // CAS pion blanc (y-1)
         // On vérifie si le pion y-1 x+1 appartient à la liste de l'opposant
         while (opponentList != NULL) {
-            if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x+1)
+            if (opponentList->_coord_x == pawnPlayerChecked->_coord_x+1
                     && opponentList->_coord_y == pawnPlayerChecked->_coord_y-1
                     && opponentList->_state == ALIVE){
                         printf("Le pion est present dans la liste de l'opposant en +1\n");
@@ -398,7 +414,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         // On vérifie si le pion y-1 x+1 appartient à la liste du joueur
         if (isPawnInOpponentList == 0) {
             while (playerList != NULL) {
-                if ((playerList->_coord_x == pawnPlayerChecked->_coord_x+1)
+                if (playerList->_coord_x == pawnPlayerChecked->_coord_x+1
                         && playerList->_coord_y == pawnPlayerChecked->_coord_y-1
                         && playerList->_state == ALIVE){
                             printf("Le pion est present dans la liste du joueur en +1\n");
@@ -420,7 +436,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         if (isMoveIsOutOfBoard == 0 && isPawnInOpponentList == 1 && isPawnInPlayerList == 0) {
             opponentList = opponent->p_listPawn->p_head;
             while (opponentList != NULL) {
-                if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x+2)
+                if (opponentList->_coord_x == pawnPlayerChecked->_coord_x+2
                         && opponentList->_coord_y == pawnPlayerChecked->_coord_y-2
                         && opponentList->_state == ALIVE){
                             printf("Le pion est present dans la liste de l'opposant en +2\n");
@@ -431,7 +447,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             }
             playerList = player->p_listPawn->p_head;
             while (playerList != NULL) {
-                if ((playerList->_coord_x == pawnPlayerChecked->_coord_x+2)
+                if (playerList->_coord_x == pawnPlayerChecked->_coord_x+2
                         && playerList->_coord_y == pawnPlayerChecked->_coord_y-2
                         && playerList->_state == ALIVE){
                             printf("Le pion est present dans la liste du joueur en +2\n");
@@ -452,7 +468,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         // On vérifie si le pion y-1 x-1 appartient à la liste de l'opposant
         opponentList = opponent->p_listPawn->p_head;
         while (opponentList != NULL) {
-            if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x-1)
+            if (opponentList->_coord_x == pawnPlayerChecked->_coord_x-1
                     && opponentList->_coord_y == pawnPlayerChecked->_coord_y-1
                     && opponentList->_state == ALIVE){
                         printf("Le pion est present dans la liste de l'opposant en -1\n");
@@ -466,7 +482,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         // On vérifie si le pion y-1 x-1 appartient à la liste du joueur
             playerList = player->p_listPawn->p_head;
             while (playerList != NULL) {
-                if ((playerList->_coord_x == pawnPlayerChecked->_coord_x-1)
+                if (playerList->_coord_x == pawnPlayerChecked->_coord_x-1
                         && playerList->_coord_y == pawnPlayerChecked->_coord_y-1
                         && playerList->_state == ALIVE){
                             printf("Le pion est present dans la liste du joueur en -1\n");
@@ -488,7 +504,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
         if (isMoveIsOutOfBoard == 0 && isPawnInOpponentList == 1 && isPawnInPlayerList == 0) {
             opponentList = opponent->p_listPawn->p_head;
             while (opponentList != NULL) {
-                if ((opponentList->_coord_x == pawnPlayerChecked->_coord_x-2)
+                if (opponentList->_coord_x == pawnPlayerChecked->_coord_x-2
                         && opponentList->_coord_y == pawnPlayerChecked->_coord_y-2
                         && opponentList->_state == ALIVE){
                             printf("Le pion est present dans la liste de l'opposant en -2\n");
@@ -499,7 +515,7 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
             }
             playerList = player->p_listPawn->p_head;
             while (playerList != NULL) {
-                if ((playerList->_coord_x == pawnPlayerChecked->_coord_x-2)
+                if (playerList->_coord_x == pawnPlayerChecked->_coord_x-2
                         && playerList->_coord_y == pawnPlayerChecked->_coord_y-2
                         && playerList->_state == ALIVE){
                             printf("Le pion est present dans la liste du joueur en -2\n");
@@ -653,4 +669,128 @@ int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlaye
     } else {
         return 0;
     }
+}
+
+int IsMandatoryDraughtValid(player_t *opponent, pawn_t *pawnPlayerChecked, pawn_t *pawnOpponentChecked)
+{
+    pawn_t* pawnsOpponent = opponent->p_listPawn->p_head;
+
+    if(pawnPlayerChecked->_coord_x - pawnOpponentChecked->_coord_x > 0
+    && pawnPlayerChecked->_coord_y - pawnOpponentChecked->_coord_y > 0) // Déplacement Nord-Ouest
+    {
+        while(pawnsOpponent != NULL)
+        {
+            // printf("\nNO\n");
+            // printf("O->_coord_x = %d\n", pawnsOpponent->_coord_x);
+            // printf("O->_coord_y = %d\n", pawnsOpponent->_coord_y);
+            // printf("C->_coord_x = %d\n", pawnOpponentChecked->_coord_x);
+            // printf("C->_coord_y = %d\n", pawnOpponentChecked->_coord_y);
+            // printf("P_X - C_X = %d\n", pawnPlayerChecked->_coord_x - pawnOpponentChecked->_coord_x);
+            // printf("P_Y - C_Y = %d\n", pawnPlayerChecked->_coord_y - pawnOpponentChecked->_coord_y);
+
+            if (pawnsOpponent->_coord_x == pawnOpponentChecked->_coord_x - 1
+            && pawnsOpponent->_coord_y == pawnOpponentChecked->_coord_y - 1
+            && pawnOpponentChecked->_coord_x - 1 < 0
+            && pawnOpponentChecked->_coord_x - 1 > 9
+            && pawnOpponentChecked->_coord_y - 1 < 0
+            && pawnOpponentChecked->_coord_y - 1 > 9)
+            {
+                printf("\nNO\n");
+                printf("O->_coord_x = %d\n", pawnsOpponent->_coord_x);
+                printf("O->_coord_y = %d\n", pawnsOpponent->_coord_y);
+                printf("C->_coord_x = %d\n", pawnOpponentChecked->_coord_x);
+                printf("C->_coord_y = %d\n", pawnOpponentChecked->_coord_y);
+                printf("P_X - C_X = %d\n", pawnPlayerChecked->_coord_x - pawnOpponentChecked->_coord_x);
+                printf("P_Y - C_Y = %d\n", pawnPlayerChecked->_coord_y - pawnOpponentChecked->_coord_y);
+                // Un pion se trouve dans la case suivant le pion adverse
+                return 0;
+            }
+            else
+            {
+                pawnsOpponent = pawnsOpponent->p_next;
+            }
+        }
+    } else if (pawnPlayerChecked->_coord_x - pawnOpponentChecked->_coord_x > 0
+    && pawnPlayerChecked->_coord_y - pawnOpponentChecked->_coord_y < 0) // Déplacement Sud-Ouest
+    {
+        while(pawnsOpponent != NULL)
+        {
+            if (pawnsOpponent->_coord_x == pawnOpponentChecked->_coord_x - 1
+            && pawnsOpponent->_coord_y == pawnOpponentChecked->_coord_y + 1
+            && pawnOpponentChecked->_coord_x - 1 < 0
+            && pawnOpponentChecked->_coord_x - 1 > 9
+            && pawnOpponentChecked->_coord_y - 1 < 0
+            && pawnOpponentChecked->_coord_y - 1 > 9)
+            {
+                printf("\nSO\n");
+                printf("O->_coord_x = %d\n", pawnsOpponent->_coord_x);
+                printf("O->_coord_y = %d\n", pawnsOpponent->_coord_y);
+                printf("C->_coord_x = %d\n", pawnOpponentChecked->_coord_x);
+                printf("C->_coord_y = %d\n", pawnOpponentChecked->_coord_y);
+                printf("P_X - C_X = %d\n", pawnPlayerChecked->_coord_x - pawnOpponentChecked->_coord_x);
+                printf("P_Y - C_Y = %d\n", pawnPlayerChecked->_coord_y - pawnOpponentChecked->_coord_y);
+                // Un pion se trouve dans la case suivant le pion adverse
+                return 0;
+            }
+            else
+            {
+                pawnsOpponent = pawnsOpponent->p_next;
+            }
+        }
+    } else if (pawnPlayerChecked->_coord_x - pawnOpponentChecked->_coord_x < 0
+    && pawnPlayerChecked->_coord_y - pawnOpponentChecked->_coord_y > 0) // Déplacement Nord-Est
+    {
+        while(pawnsOpponent != NULL)
+        {
+            if (pawnsOpponent->_coord_x == pawnOpponentChecked->_coord_x + 1
+            && pawnsOpponent->_coord_y == pawnOpponentChecked->_coord_y - 1
+            && pawnOpponentChecked->_coord_x - 1 < 0
+            && pawnOpponentChecked->_coord_x - 1 > 9
+            && pawnOpponentChecked->_coord_y - 1 < 0
+            && pawnOpponentChecked->_coord_y - 1 > 9)
+            {
+                printf("\nNE\n");
+                printf("O->_coord_x = %d\n", pawnsOpponent->_coord_x);
+                printf("O->_coord_y = %d\n", pawnsOpponent->_coord_y);
+                printf("C->_coord_x = %d\n", pawnOpponentChecked->_coord_x);
+                printf("C->_coord_y = %d\n", pawnOpponentChecked->_coord_y);
+                printf("P_X - C_X = %d\n", pawnPlayerChecked->_coord_x - pawnOpponentChecked->_coord_x);
+                printf("P_Y - C_Y = %d\n", pawnPlayerChecked->_coord_y - pawnOpponentChecked->_coord_y);
+                // Un pion se trouve dans la case suivant le pion adverse
+                return 0;
+            }
+            else
+            {
+                pawnsOpponent = pawnsOpponent->p_next;
+            }
+        }
+    } else // Déplacement Sud-Est
+    {
+        while(pawnsOpponent != NULL)
+        {
+            if (pawnsOpponent->_coord_x == pawnOpponentChecked->_coord_x + 1
+            && pawnsOpponent->_coord_y == pawnOpponentChecked->_coord_y + 1
+            && pawnOpponentChecked->_coord_x - 1 < 0
+            && pawnOpponentChecked->_coord_x - 1 > 9
+            && pawnOpponentChecked->_coord_y - 1 < 0
+            && pawnOpponentChecked->_coord_y - 1 > 9)
+            {
+                printf("\nSE\n");
+                printf("O->_coord_x = %d\n", pawnsOpponent->_coord_x);
+                printf("O->_coord_y = %d\n", pawnsOpponent->_coord_y);
+                printf("C->_coord_x = %d\n", pawnOpponentChecked->_coord_x);
+                printf("C->_coord_y = %d\n", pawnOpponentChecked->_coord_y);
+                printf("P_X - C_X = %d\n", pawnPlayerChecked->_coord_x - pawnOpponentChecked->_coord_x);
+                printf("P_Y - C_Y = %d\n", pawnPlayerChecked->_coord_y - pawnOpponentChecked->_coord_y);
+                // Un pion se trouve dans la case suivant le pion adverse
+                return 0;
+            }
+            else
+            {
+                pawnsOpponent = pawnsOpponent->p_next;
+            }
+        }
+    }
+
+    return 1;
 }

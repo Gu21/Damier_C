@@ -102,7 +102,8 @@ void endGame(player_t *pPlayer1, player_t *pPlayer2)
     }
 }
 
-void displayMove(int initMoveX, int initMoveY, int finalMoveX, int finalMoveY)
+void displayMove(char color, int initMoveX, int initMoveY, int finalMoveX, int finalMoveY)
 {
-    printf("The piece on %d %d has been moved on %d %d.\n", initMoveX, initMoveY, finalMoveX, finalMoveY);
+    printf("The %c piece on %d %d has been moved on %d %d.\n", color, initMoveX, initMoveY, finalMoveX, finalMoveY);
+    saveLog(color, initMoveX, initMoveY, finalMoveX, finalMoveY);
 }

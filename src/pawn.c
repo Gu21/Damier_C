@@ -368,6 +368,8 @@ void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, in
             }
         }
     }
+
+    displayMove(initX, initY, finalX, finalY);
 }
 
 int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlayerChecked) {

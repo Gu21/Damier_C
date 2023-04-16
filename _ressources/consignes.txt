@@ -4,11 +4,11 @@ Création d'un jeu de Dame : Player VS Player
 
 // - Générer un affichage.
 // - Chaque tour on doit voir l'état du damier.
-- Chaque déplacement affiche la source du pion et la destination
+// - Chaque déplacement affiche la source du pion et la destination
 
-On doit afficher :
-- Le nombre de pièces noires restantes.
-- Le nombre de pieces blanches restantes.
+// On doit afficher :
+// - Le nombre de pièces noires restantes.
+// - Le nombre de pieces blanches restantes.
 
 
 - Chaque déplacement d'une partie doit etre log dans un fichier.

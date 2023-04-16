@@ -28,7 +28,11 @@ void displayBoard(player_t *pPlayer1, player_t *pPlayer2) {
     pawn_t* currentPawnPlayer1 = pPlayer1->p_listPawn->p_head;
     pawn_t* currentPawnPlayer2 = pPlayer2->p_listPawn->p_head;
 
-    printf("   0123456789\n");
+    // Display du nombre de pièces restantes
+    printf("\nNumber of white pieces available: %d\n", (20-pPlayer1->_score));
+    printf("Number of black pieces available: %d\n", (20-pPlayer2->_score));
+
+    printf("\n   0123456789\n");
     printf("   ----------\n");
 
     for (int incr_row = 0; incr_row < BOARD_SIZE; incr_row++)
@@ -86,7 +90,6 @@ void displayBoard(player_t *pPlayer1, player_t *pPlayer2) {
     }
 }
 
-
 void endGame(player_t *pPlayer1, player_t *pPlayer2)
 {
     if(pPlayer1->_score == 20)
@@ -97,4 +100,9 @@ void endGame(player_t *pPlayer1, player_t *pPlayer2)
     {
         printf("%s a gagné !\nIl lui restait %d pion(s).\n", pPlayer1->_nom, (20-pPlayer1->_score));
     }
+}
+
+void displayMove(int initMoveX, int initMoveY, int finalMoveX, int finalMoveY)
+{
+    printf("The piece on %d %d has been moved on %d %d.\n", initMoveX, initMoveY, finalMoveX, finalMoveY);
 }

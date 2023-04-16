@@ -115,7 +115,7 @@ void updatePawnStatus(pawn_t *movingPawn) {
     movingPawn->_status = QUEEN;
 }
 
-void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn)
+int checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn)
 {
     //pawn_t* pawnPlayerChecked = malloc(sizeof(pawn_t));
     //pawn_t* pawnOpponentChecked = malloc(sizeof(pawn_t));
@@ -157,7 +157,7 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
                             if (isMandatoryMoveValid(player, opponent, pawnPlayerChecked) == 1) {
                                 // On sélectionne ce pion
                                 *movingPawn = *pawnPlayerChecked;
-                                return;
+                                return 1;
                             } else {
                                 // Sinon on passe au pion adversaire suivant
                                 pawnOpponentChecked = pawnOpponentChecked->p_next;
@@ -183,7 +183,7 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
                             if (isMandatoryMoveValid(player, opponent, pawnPlayerChecked) == 1) {
                                 // On sélectionne ce pion
                                 *movingPawn = *pawnPlayerChecked;
-                                return;
+                                return 1;
                             } else {
                                 // Sinon on passe au pion adversaire suivant
                                 pawnOpponentChecked = pawnOpponentChecked->p_next;
@@ -229,9 +229,10 @@ void checkMandatoryMove(player_t *player, player_t *opponent, pawn_t *movingPawn
         // On passe au pion suivant
         pawnPlayerChecked = pawnPlayerChecked->p_next;
     }
+    return 0;
 }
 
-int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn, int tempFinalX, int tempFinalY)
+int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn, int tempFinalX, int tempFinalY, int isMandatoryMove)
 {
     // Déclaration de la mémoire
     //pawn_t* pawnCurrentPlayer = malloc(sizeof(pawn_t));
@@ -250,14 +251,25 @@ int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn
     if (movingPawn->_status == PAWN) {
         // Vérifier si le joueur est blanc
         if (player->_couleur == COLOR_W) {
-            // Déplacement interdit sur l'axe Y pour le pion blanc
-            if ((movingPawn->_coord_y <= tempFinalY)
-            || ((abs(movingPawn->_coord_y - tempFinalY) != 1)
-               && (abs(movingPawn->_coord_y - tempFinalY) != 2))
-            || (abs(movingPawn->_coord_y - tempFinalY) != abs(movingPawn->_coord_x - tempFinalX))) {
-                //printf("Unauthorized move for color %c\n", player->_couleur);
-                return 0;
+            if (isMandatoryMove == 0) {
+                // Déplacement interdit sur l'axe Y pour le pion blanc
+                if ((movingPawn->_coord_y <= tempFinalY)
+                || ((abs(movingPawn->_coord_y - tempFinalY) != 1)
+                && (abs(movingPawn->_coord_y - tempFinalY) != 2))
+                || (abs(movingPawn->_coord_y - tempFinalY) != abs(movingPawn->_coord_x - tempFinalX))) {
+                    //printf("Unauthorized move for color %c\n", player->_couleur);
+                    return 0;
+                }
+            } else {
+                // Déplacement interdit sur l'axe Y pour le pion blanc
+                if (((abs(movingPawn->_coord_y - tempFinalY) != 1)
+                && (abs(movingPawn->_coord_y - tempFinalY) != 2))
+                || (abs(movingPawn->_coord_y - tempFinalY) != abs(movingPawn->_coord_x - tempFinalX))) {
+                    //printf("Unauthorized move for color %c\n", player->_couleur);
+                    return 0;
+                }
             }
+
 
             // Déplacement interdit sur l'axe X pour le pion blanc
             if ((movingPawn->_coord_x+2 < tempFinalX && tempFinalX < movingPawn->_coord_x-2)
@@ -267,14 +279,25 @@ int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn
             }
 
         } else {
-            // Déplacement interdit sur l'axe Y pour le pion noir
-            if ((movingPawn->_coord_y >= tempFinalY)
-            || ((abs(movingPawn->_coord_y - tempFinalY) != 1)
-               && (abs(movingPawn->_coord_y - tempFinalY) != 2))
-            || (abs(movingPawn->_coord_y - tempFinalY) != abs(movingPawn->_coord_x - tempFinalX))) {
-                //printf("Unauthorized move for color %c\n", player->_couleur);
-                return 0;
+            if (isMandatoryMove == 0) {
+                // Déplacement interdit sur l'axe Y pour le pion noir
+                if ((movingPawn->_coord_y >= tempFinalY)
+                || ((abs(movingPawn->_coord_y - tempFinalY) != 1)
+                && (abs(movingPawn->_coord_y - tempFinalY) != 2))
+                || (abs(movingPawn->_coord_y - tempFinalY) != abs(movingPawn->_coord_x - tempFinalX))) {
+                    //printf("Unauthorized move for color %c\n", player->_couleur);
+                    return 0;
+                }
+            } else {
+                // Déplacement interdit sur l'axe Y pour le pion noir
+                if (((abs(movingPawn->_coord_y - tempFinalY) != 1)
+                && (abs(movingPawn->_coord_y - tempFinalY) != 2))
+                || (abs(movingPawn->_coord_y - tempFinalY) != abs(movingPawn->_coord_x - tempFinalX))) {
+                    //printf("Unauthorized move for color %c\n", player->_couleur);
+                    return 0;
+                }
             }
+            
 
             // Déplacement interdit sur l'axe X pour le pion blanc
             if ((movingPawn->_coord_x+2 < tempFinalX && tempFinalX < movingPawn->_coord_x-2)
@@ -325,7 +348,7 @@ int checkAllMoves(player_t *player, player_t *opponent, pawn_t *movingPawn)
     {
         for(int j=0; j<BOARD_SIZE; j++)
         {
-            possibleMoves += checkAuthorizedMove(player, opponent, movingPawn, i, j);
+            possibleMoves += checkAuthorizedMove(player, opponent, movingPawn, i, j, 0);
             if(possibleMoves > 0)
                 return possibleMoves;
         }

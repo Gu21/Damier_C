@@ -31,6 +31,7 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
     int MovingPawnSelected = 0;
     int continueMove = 1;
     int dejaJouer = 0;
+    int isMandatoryMove = 0;
 
     pawn_t* tempPawn = player->p_listPawn->p_head;
 
@@ -45,7 +46,7 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
         movingPawn->p_previous = NULL;
 
         // On vérifie si le joueur a un déplacement obligatoire à faire
-        checkMandatoryMove(player, opponent, movingPawn);
+        isMandatoryMove = checkMandatoryMove(player, opponent, movingPawn);
 
         // S'il n'y a pas de mouvement obligatoire
         if (movingPawn->_coord_x == 0 && movingPawn->_coord_y == 0) {
@@ -129,7 +130,7 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
                 rewind(stdin);
 
                 // On vérifie si le déplacement est possible
-                if (checkAuthorizedMove(player, opponent, movingPawn, tempFinalX, tempFinalY) == 1)
+                if (checkAuthorizedMove(player, opponent, movingPawn, tempFinalX, tempFinalY, isMandatoryMove) == 1)
                     break;
                 else
                     printf("Unauthorized move. Try again.\n");

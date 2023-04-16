@@ -61,4 +61,5 @@ void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, in
 
 int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlayerChecked);
 int IsMandatoryDraughtValid(player_t *opponent, pawn_t *pawnPlayerChecked, pawn_t *pawnOpponentChecked);        // On vérifie si le mouvement de la reine est possible
+int isPawnInList(pawn_t* list, pawn_t *pawnPlayerChecked, int coordX, int coordY);
 #endif /* !pawn_H_ */

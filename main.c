@@ -11,7 +11,7 @@ int main()
         switch(choix)
         {
             case 1:     // PvP
-                game(0, 0);
+                game(0, 0, 0);
                 break;
 
             case 2:     // PvE
@@ -20,6 +20,7 @@ int main()
                 return 0;
 
             case 3:
+                game(0, 0, 1);
                 break;
 
             case 4:     // Quitter

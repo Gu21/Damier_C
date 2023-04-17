@@ -1,7 +1,7 @@
 #include "game.h"
 
 
-void game(int IA_J1, int IA_J2)
+void game(int IA_J1, int IA_J2, int isLoad)
 {
     char J1_name[30];
     char J2_name[30];
@@ -32,6 +32,11 @@ void game(int IA_J1, int IA_J2)
     initPlayer(J1, J1_name, COLOR_W);
     initPlayer(J2, J2_name, COLOR_B);
 
+    // On charge la partie
+    if (isLoad == 1) {
+        loadGame(J1, J2);
+    }
+    
     // On affiche la board en début de partie
     displayBoard(J1, J2);
 
@@ -129,9 +134,10 @@ void saveGame(player_t *player, player_t *opponent) {
         fputs(input, fp);
         opponentList = opponentList->p_next;
     }
-
-    // On écrit la liste des pions dans le fichier ouvert
     
+    // Pour la fin du fichier
+    snprintf(input, sizeof input, "E");
+    fputs(input, fp);
 
     // Vérification que la fermeture du fichier s'est bien passée
     if (fclose(fp) == EOF)
@@ -144,11 +150,11 @@ void saveGame(player_t *player, player_t *opponent) {
     free(opponentList);
 }
 
-void loadGame(void) {
+void loadGame(player_t *J1, player_t *J2) {
 
     char buf[255];
     // Ouverture du fichier en lecture
-    FILE *fp = fopen("save.txt", "r");
+    FILE *fp = fopen("./save/save.txt", "r");
 
     // Vérification si l'ouverture du fichier s'est bien passée
     if (fp == NULL)
@@ -156,6 +162,12 @@ void loadGame(void) {
         printf("Le fichier save.txt n'a pas pu être ouvert\n");
         exit(-1);
     }
+    printf("Ouverture du fichier ok\n");
+    pawn_t* playerList = J1->p_listPawn->p_head;
+    pawn_t* opponentList = J2->p_listPawn->p_head;
+
+    char* coordX;
+    char* coordY;
 
     do
     {
@@ -163,11 +175,30 @@ void loadGame(void) {
         fgets(buf, sizeof buf, fp);
 
         // On vérifie que la ligne n'est pas vide
-        if(*buf == '\n')
+        if(*buf == 'E')
             break;
 
         // à enregistrer dans le pointeur
-        printf("%s\n", buf);
+        if (buf[0] == 'W') {
+            coordX = &buf[2];
+            coordY = &buf[4];
+            playerList->_coord_x = (int)strtol(coordX, NULL, 10);
+            playerList->_coord_y= (int)strtol(coordY, NULL, 10);
+            playerList->_state= buf[6];
+            playerList->_status= buf[8];
+            playerList = playerList->p_next;
+            // printf("%s", buf);
+        } else {
+            coordX = &buf[2];
+            coordY = &buf[4];
+            opponentList->_coord_x = (int)strtol(coordX, NULL, 10);
+            opponentList->_coord_y= (int)strtol(coordY, NULL, 10);
+            opponentList->_state= buf[6];
+            opponentList->_status= buf[8];
+            opponentList = opponentList->p_next;
+            //printf("%s", buf);
+        }
+        
     } while (1);
 
     // Vérification que la fermeture du fichier s'est bien passée

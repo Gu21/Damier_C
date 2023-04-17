@@ -17,9 +17,9 @@
 
 
 // PROTOTYPE(S)
-void game(int IA_J1, int IA_J2);                                                        // Gère la partie
+void game(int IA_J1, int IA_J2, int isLoad);                                                        // Gère la partie
 void saveLog(char color, int initMoveX, int initMoveY, int finalMoveX, int finalMoveY); // Log les déplacements
 void saveGame(player_t *player, player_t *opponent);                                    // Sauvegarde la partie
-void loadGame(void);                                                                    // Est censé charger la partie
+void loadGame(player_t *J1, player_t *J2);                                                                    // Est censé charger la partie
 
 #endif /* !game_H_ */

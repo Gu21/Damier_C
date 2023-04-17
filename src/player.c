@@ -57,7 +57,7 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
                 while(MovingPawnSelected == 0)
                 {
                     // On demande les coordonnées initiales du pion à déplacer
-                    printf("Please enter X and Y initial coordinate with format X Y (-1 -1 to save): ");
+                    printf("Please enter X and Y initial coordinate with format X Y (-1 to save): ");
                     scanf("%d %d", &tempInitX, &tempInitY);
                     rewind(stdin);
 

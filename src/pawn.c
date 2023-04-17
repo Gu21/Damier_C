@@ -103,6 +103,8 @@ void initPawn(pawn_header_t *liste_chaine, int i, char couleur)
 }
 
 void updatePawnState(pawn_t *pawnEated, player_t *opponent) {
+    pawnEated->_coord_x = -1;
+    pawnEated->_coord_y = -1;
     pawnEated->_state = DEAD;
     opponent->_score++;
 }

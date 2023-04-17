@@ -119,17 +119,19 @@ void saveGame(player_t *player, player_t *opponent) {
     while (playerList != NULL) {
         snprintf(input, sizeof input, "%c/%d/%d/%c/%c\n",
             player->_couleur, playerList->_coord_x, playerList->_coord_y, playerList->_state, playerList->_status);
+        fputs(input, fp);
         playerList = playerList->p_next;
     }
 
     while (opponentList != NULL) {
         snprintf(input, sizeof input, "%c/%d/%d/%c/%c\n",
             opponent->_couleur, opponentList->_coord_x, opponentList->_coord_y, opponentList->_state, opponentList->_status);
+        fputs(input, fp);
         opponentList = opponentList->p_next;
     }
 
     // On écrit la liste des pions dans le fichier ouvert
-    fputs(input, fp);
+    
 
     // Vérification que la fermeture du fichier s'est bien passée
     if (fclose(fp) == EOF)

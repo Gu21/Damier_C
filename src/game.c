@@ -159,10 +159,10 @@ void loadGame(player_t *J1, player_t *J2) {
     // Vérification si l'ouverture du fichier s'est bien passée
     if (fp == NULL)
     {
-        printf("Le fichier save.txt n'a pas pu être ouvert\n");
+        printf("save.txt file does not exist\n");
         exit(-1);
     }
-    printf("Ouverture du fichier ok\n");
+    printf("Load in progresse\n");
     pawn_t* playerList = J1->p_listPawn->p_head;
     pawn_t* opponentList = J2->p_listPawn->p_head;
 

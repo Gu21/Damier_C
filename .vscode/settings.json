@@ -5,6 +5,7 @@
         "player.h": "c",
         "pawn.h": "c",
         "display.h": "c",
-        "game.h": "c"
+        "game.h": "c",
+        "cstdio": "c"
     }
 }

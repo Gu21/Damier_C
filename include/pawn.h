@@ -39,6 +39,25 @@ typedef struct pawn_header_s
     pawn_t* p_tail;
 }pawn_header_t;
 
+// Structure permettant de gérer l'historique des déplacements
+typedef struct movement_history
+{
+    int _init_coord_x;
+    int _init_coord_y;
+    int _final_coord_x;
+    int _final_coord_y;
+    struct movement_history *p_next;
+    struct movement_history *p_previous;
+} movement_history_t;
+
+// Structure permettant d'accéder à la tête
+// et à la queue d'une liste chainée de pions
+typedef struct movement_history_header_s
+{
+    int _length;
+    movement_history_t* p_head;
+    movement_history_t* p_tail;
+} movement_history_header_t;
 
 // PROTOTYPE DE STRUCT (défini dans player.h)
 typedef struct player_s player_t;
@@ -49,6 +68,7 @@ typedef struct player_s player_t;
 
 
 // PROTOTYPE(S)
+void initMovementHistoryList(movement_history_header_t *liste_chaine, movement_history_t *movement_history);
 void initPawnList(pawn_header_t *liste_chaine, char couleur);                                                                           // Initialisation de la liste des pions
 void initPawn(pawn_header_t *liste_chaine, int i, char couleur);                                                                        // Initialisation d'un pion
 int checkAuthorizedMove(player_t *player, player_t *opponent, pawn_t *movingPawn, int tempFinalX, int tempFinalY, int isMandatoryMove); // Déplacement autorisé ou non du joueur.
@@ -60,5 +80,7 @@ void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, in
 int isMandatoryMoveValid(player_t *player, player_t *opponent, pawn_t *pawnPlayerChecked);
 int IsMandatoryDraughtValid(player_t *opponent, pawn_t *pawnPlayerChecked, pawn_t *pawnOpponentChecked);                                // On vérifie si le mouvement de la reine est possible
 int isPawnInList(pawn_t* list, pawn_t *pawnPlayerChecked, int coordX, int coordY);
-
+void appendMovementHistoryList(movement_history_header_t *liste_chaine, int initX, int initY, int finalX, int finalY);
+void displayHistory(movement_history_header_t *liste_chaine);
+int cancelLastMove(player_t *player, player_t *opponent);
 #endif /* !pawn_H_ */

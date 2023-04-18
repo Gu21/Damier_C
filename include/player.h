@@ -15,6 +15,7 @@ typedef struct player_s {
     int _score;
     char _couleur;
     pawn_header_t *p_listPawn;
+    movement_history_header_t *p_movementHistory;
 } player_t;
 
 

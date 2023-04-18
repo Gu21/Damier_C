@@ -1,5 +1,27 @@
 #include "pawn.h"
 
+void initMovementHistoryList(movement_history_header_t *liste_chaine, movement_history_t *movement_history)
+{
+    //Je teste si liste_chaine est égale à null
+    if (liste_chaine == NULL || movement_history == NULL)
+    {
+        // Le programme s'arrête avec le exit()
+        exit(-4);
+    }
+
+    movement_history->_init_coord_x = 0;
+    movement_history->_init_coord_y = 0;
+    movement_history->_final_coord_x = 0;
+    movement_history->_final_coord_y = 0;
+    movement_history->p_next = NULL;
+    movement_history->p_previous = NULL;
+
+    //Si c'est ok on rajoute les éléments dans la première structure.
+    liste_chaine->_length = 0;
+    liste_chaine->p_head = movement_history;
+    liste_chaine->p_tail = movement_history->p_next;
+}
+
 //-----Fonction qui initialise la liste des pions--------
 void initPawnList(pawn_header_t *liste_chaine, char couleur)
 {
@@ -752,6 +774,82 @@ int IsMandatoryDraughtValid(player_t *opponent, pawn_t *pawnPlayerChecked, pawn_
                 pawnsOpponent = pawnsOpponent->p_next;
             }
         }
+    }
+
+    return 1;
+}
+
+void appendMovementHistoryList(movement_history_header_t *liste_chaine, int initX, int initY, int finalX, int finalY)
+{
+    /* Création du nouvel élément */
+    movement_history_t *movement = malloc(sizeof(*movement));
+    if (liste_chaine == NULL || movement == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
+    movement->_init_coord_x = initX;
+    movement->_init_coord_y = initY;
+    movement->_final_coord_x = finalX;
+    movement->_final_coord_y = finalY;
+
+    /* Insertion de l'élément au début de la liste */
+    movement->p_next = liste_chaine->p_head;
+    liste_chaine->p_head = movement;
+}
+
+void displayHistory(movement_history_header_t *liste_chaine)
+{
+    if (liste_chaine == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
+
+    movement_history_t *current = liste_chaine->p_head;
+
+    while (current != NULL)
+    {
+        printf("%d -> \n", current->_init_coord_x);
+        printf("%d -> \n", current->_init_coord_y);
+        printf("%d -> \n", current->_final_coord_x);
+        printf("%d -> \n", current->_final_coord_y);
+        current = current->p_next;
+    }
+    printf("NULL\n");
+}
+
+int cancelLastMove(player_t *player, player_t *opponent)
+{
+    pawn_t* playerPawntoRewind = player->p_listPawn->p_head;
+    pawn_t* opponentPawntoRewind = opponent->p_listPawn->p_head;
+    movement_history_t* playerLastMove = player->p_movementHistory->p_head;
+    movement_history_t* opponentLastMove = opponent->p_movementHistory->p_head;
+
+    while (playerPawntoRewind != NULL)
+    {
+        if (playerPawntoRewind->_coord_x == playerLastMove->_final_coord_x
+            && playerPawntoRewind->_coord_y == playerLastMove->_final_coord_y){
+                playerPawntoRewind->_coord_x = playerLastMove->_init_coord_x;
+                playerPawntoRewind->_coord_y = playerLastMove->_init_coord_y;
+                break;
+        } else {
+            playerPawntoRewind = playerPawntoRewind->p_next;
+        }
+    }
+
+    while (opponentPawntoRewind != NULL)
+    {
+        if (opponentPawntoRewind->_coord_x == opponentLastMove->_final_coord_x
+            && opponentPawntoRewind->_coord_y == opponentLastMove->_final_coord_y){
+                opponentPawntoRewind->_coord_x = opponentLastMove->_init_coord_x;
+                opponentPawntoRewind->_coord_y = opponentLastMove->_init_coord_y;
+                break;
+        } else {
+            opponentPawntoRewind = opponentPawntoRewind->p_next;
+        }
+    }
+
+    if (playerPawntoRewind == NULL && opponentPawntoRewind == NULL) {
+        return 0;
     }
 
     return 1;

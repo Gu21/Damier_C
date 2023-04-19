@@ -129,6 +129,10 @@ void updatePawnState(pawn_t *pawnEated, player_t *opponent) {
     pawnEated->_coord_y = -1;
     pawnEated->_state = DEAD;
     opponent->_score++;
+
+    //pawnEated->p_previous->p_next = pawnEated->p_next;
+    //pawnEated->p_next->p_previous = pawnEated->p_previous;
+    //free(pawnEated);
 }
 
 void updatePawnStatus(pawn_t *movingPawn) {
@@ -390,8 +394,10 @@ void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, in
         if(color == COLOR_W) {
             while (pawnChecked != NULL)
             {
-                if ((pawnChecked->_coord_x == initX+1 || pawnChecked->_coord_x == initX-1)
-                 && (pawnChecked->_coord_y == initY-1 || pawnChecked->_coord_y == initY+1)) {
+                //if ((pawnChecked->_coord_x == initX+1 || pawnChecked->_coord_x == initX-1)
+                // && (pawnChecked->_coord_y == initY-1 || pawnChecked->_coord_y == initY+1)) {
+                if (pawnChecked->_coord_x == initX+((int)round((float)((float)((float)finalX-(float)initX) / 10.0) * 5.0))
+                && pawnChecked->_coord_y == initY+((int)round((float)((float)((float)finalY-(float)initY) / 10.0) * 5.0))) {
                     // On a mangé ce pion
                     updatePawnState(pawnChecked, opponent);
                     break;
@@ -402,8 +408,10 @@ void movePawn(pawn_t *movingPawn, player_t *opponent, char color, int finalX, in
         } else {
             while (pawnChecked != NULL)
             {
-                if ((pawnChecked->_coord_x == initX+1 || pawnChecked->_coord_x == initX-1)
-                 && (pawnChecked->_coord_y == initY+1 || pawnChecked->_coord_y == initY-1)) {
+                //if ((pawnChecked->_coord_x == initX+1 || pawnChecked->_coord_x == initX-1)
+                // && (pawnChecked->_coord_y == initY+1 || pawnChecked->_coord_y == initY-1)) {
+                if (pawnChecked->_coord_x == initX+((int)round((float)((float)((float)finalX-(float)initX) / 10.0) * 5.0))
+                && pawnChecked->_coord_y == initY+((int)round((float)((float)((float)finalY-(float)initY) / 10.0) * 5.0))) {
                     // On a mangé ce pion
                     updatePawnState(pawnChecked, opponent);
                     break;

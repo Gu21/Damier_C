@@ -82,7 +82,7 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
                         isCancelLastMove = cancelLastMove(player, opponent);
                         if (isCancelLastMove == 1){
                             printf("Rewind Ok\n");
-                            if (player->_couleur == COLOR_W) {  
+                            if (player->_couleur == COLOR_W) {
                                 printf("\nTurn of %s\n", player->_nom);
                                 displayBoard(player, opponent);
                                 movePawnByPlayer(player, opponent);
@@ -97,7 +97,6 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
                             isCancelLastMove = 1;
                             break;
                         }
-                        
                     }
 
                     if (tempInitX >= 0 && tempInitX <= 9 && tempInitY >= 0 && tempInitY <= 9)
@@ -172,7 +171,7 @@ void movePawnByPlayer(player_t *player, player_t *opponent)
                 printf("Please enter X and Y final coordinate with format X Y : ");
                 scanf("%d %d", &tempFinalX, &tempFinalY);
                 rewind(stdin);
-                
+
                 // On vérifie si le déplacement est possible
                 if (checkAuthorizedMove(player, opponent, movingPawn, tempFinalX, tempFinalY, isMandatoryMove) == 1)
                     break;

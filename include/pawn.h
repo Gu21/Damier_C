@@ -4,6 +4,7 @@
 // SYSTEME INCLUDE(S)
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 // LOCAL INCLUDE(S)
 
@@ -24,7 +25,6 @@ typedef struct pawn_s
     int _coord_y;
     char _status;                   // Le pion (P) peut devenir Reine (Q).
     char _state;                    // Vivant (V) peut devenir Mort (M).
-    char keepBusy;                  // case occupée
     struct pawn_s *p_next;          // Ajouter struct car l'alias n'existe pas encore, il est déclaré après la création de la structure
     struct pawn_s *p_previous;
 } pawn_t;

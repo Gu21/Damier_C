@@ -36,7 +36,7 @@ void game(int IA_J1, int IA_J2, int isLoad)
     if (isLoad == 1) {
         loadGame(J1, J2);
     }
-    
+
     // On affiche la board en début de partie
     displayBoard(J1, J2);
 
@@ -134,7 +134,7 @@ void saveGame(player_t *player, player_t *opponent) {
         fputs(input, fp);
         opponentList = opponentList->p_next;
     }
-    
+
     // Pour la fin du fichier
     snprintf(input, sizeof input, "E");
     fputs(input, fp);
@@ -162,7 +162,7 @@ void loadGame(player_t *J1, player_t *J2) {
         printf("save.txt file does not exist\n");
         exit(-1);
     }
-    printf("Load in progresse\n");
+    printf("Load in progress\n");
     pawn_t* playerList = J1->p_listPawn->p_head;
     pawn_t* opponentList = J2->p_listPawn->p_head;
 
@@ -175,7 +175,7 @@ void loadGame(player_t *J1, player_t *J2) {
         fgets(buf, sizeof buf, fp);
 
         // On vérifie que la ligne n'est pas vide
-        if(*buf == 'E')
+        if(*buf == "E")
             break;
 
         // à enregistrer dans le pointeur
@@ -198,7 +198,7 @@ void loadGame(player_t *J1, player_t *J2) {
             opponentList = opponentList->p_next;
             //printf("%s", buf);
         }
-        
+
     } while (1);
 
     // Vérification que la fermeture du fichier s'est bien passée
